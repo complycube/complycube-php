@@ -46,25 +46,6 @@ $result = $complycube->checks()->create($newclient->id,
                                         ['type' => 'extensive_screening_check']);
 ```
 
-## Custom requests
-
-Requests are made using Guzzle, so any Guzzle supported options 
-can be passed using the $options parameter when making requests
-
-For example to disallow retries when creating checks
-
-```php
-$result = $$checksApi->create($newCheck, 
-                              [retry_enabled => False]);
-```
-
-To set a proxy.
-
-```php
-$result = $checksApi->create($newCheck, 
-                             [proxy => 'https://myproxy.com']);
-```
-
 ### More Documentation
 
 More documentation and code examples can be found at [https://docs.complycube.com](https://docs.complycube.com)
