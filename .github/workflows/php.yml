@@ -44,3 +44,7 @@ jobs:
         env:
           CC_API_KEY: ${{ secrets.CC_API_KEY }}
 
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v1.1.1
+        with:
+          file: ./coverage.xml
