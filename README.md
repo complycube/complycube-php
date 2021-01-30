@@ -42,9 +42,8 @@ $newclient = $complycube->clients()->create([
     'personDetails' => ['firstName' => 'John',
                         'lastName' => 'Smith']]);
 
-$result = $complycube->checks()->create([
-    'type' => 'extensive_screening_check',
-    'clientId' => $newclient->id]);
+$result = $complycube->checks()->create($newclient->id,
+                                        ['type' => 'extensive_screening_check']);
 ```
 
 ## Custom requests
