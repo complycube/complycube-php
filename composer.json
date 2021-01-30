@@ -1,0 +1,52 @@
+{
+    "name": "complycube/complycube-php",
+    "type": "library",
+    "description": "ComplyCube API PHP Client",
+    "keywords": [
+        "complycube",
+        "complycube-php",
+        "kyc",
+        "aml"
+    ],
+    "homepage": "https://www.complycube.com/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ComplyCube and contributors.",
+            "homepage": "https://www.complycube.com/"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "caseyamcl/guzzle_retry_middleware": "^2.6",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.17",
+        "phpunit/phpunit": ">=8.0",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "ComplyCube\\": "lib"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ComplyCube\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "check-style": "phpcs lib tests",
+        "fix-style": "phpcbf lib tests"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
