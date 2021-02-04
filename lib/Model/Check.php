@@ -22,7 +22,7 @@ class Check implements \JsonSerializable
     {
         $this->id = $response->id;
         $this->clientId = $response->clientId;
-        $this->enableMonitoring = $response->enableMonitoring;
+        $this->enableMonitoring = isset($response->enableMonitoring) ?  $response->enableMonitoring : null;
         $this->documentId = isset($response->documentId) ?  $response->documentId : null;
         $this->livePhotoId = isset($response->livePhotoId) ?  $response->livePhotoId : null;
         $this->entityName = $response->entityName;

@@ -5,6 +5,7 @@ namespace ComplyCube\Tests\Integration;
 use ComplyCube\ApiClient;
 use ComplyCube\ComplyCubeClient;
 use ComplyCube\Model\Check;
+use ComplyCube\Model\Image;
 use ComplyCube\Model\Validation;
 use ComplyCube\Model\PersonDetails;
 use ComplyCube\Model\Client;
@@ -50,6 +51,46 @@ class CheckTest extends \PHPUnit\Framework\TestCase
         return $result->id;
     }
 
+    /**
+    * @depends testCreatePersonClient
+    */
+    public function testCreateDocument($clientId): string
+    {
+        $result = $this->complycube->documents()->create($clientId, ['type' => 'driving_license', 'issuingCountry' => 'GB']);
+        $this->assertEquals('driving_license', $result->type);
+        $this->assertEquals($clientId, $result->clientId);
+        return $result->id;
+    }
+
+    /**
+    * @depends testCreateDocument
+    */
+    public function testUploadImageToDocument($documentId): Image
+    {
+        $image = new Image();
+        $image->fileName = 'front.jpg';
+        $image->data = file_get_contents("./tests/fixtures/encoded-20200609153459.txt", "r");
+        $result = $this->complycube->documents()->upload($documentId, 'front', $image);
+        $this->assertEquals($image->fileName, $result->fileName);
+        $this->assertEquals('front', $result->documentSide);
+        $this->assertEquals('image/jpg', $result->contentType);
+        return $result;
+    }
+
+    /**
+    * @depends testCreatePersonClient
+    * @depends testCreateDocument
+    */
+    public function testCreateDocumentCheck($clientId, $documentId): string
+    {
+        $result = $this->complycube->checks()->create($clientId, ['type' => 'document_check', 'documentId' => $documentId]);
+        $this->assertObjectHasAttribute('id', $result);
+        $this->assertEquals('document_check', $result->type);
+        $this->assertEquals($clientId, $result->clientId);
+        return $result->id;
+    }
+
+    
     /**
     * @depends testCreatePersonClient
     */
