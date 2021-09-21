@@ -6,14 +6,14 @@ use \stdClass;
 
 class Image implements \JsonSerializable
 {
-    public ?string $id = null;
-    public ?string $clientId = null;
-    public ?string $fileName = null;
-    public ?string $documentSide = null;
-    public ?string $downloadLink = null;
-    public ?string $contentType = null;
-    public ?string $data = null;
-    public ?int $size = null;
+    public $id = null;
+    public $clientId = null;
+    public $fileName = null;
+    public $documentSide = null;
+    public $downloadLink = null;
+    public $contentType = null;
+    public $data = null;
+    public $size = null;
     protected $createdAt;
     protected $updatedAt;
 

@@ -6,11 +6,11 @@ use \stdClass;
 
 class RiskProfile implements \JsonSerializable
 {
-    public ?string $overall = null;
-    public ?CountryRisk $countryRisk = null;
-    public ?PoliticalExposureRisk $politicalExposureRisk = null;
-    public ?OccupationRisk $occupationRisk = null;
-    public ?WatchlistRisk $watchlistRisk = null;
+    public $overall = null;
+    public $countryRisk = null;
+    public $politicalExposureRisk = null;
+    public $occupationRisk = null;
+    public $watchlistRisk = null;
 
     public function load(stdClass $response)
     {
@@ -37,8 +37,8 @@ class RiskProfile implements \JsonSerializable
 
 class CountryRisk implements \JsonSerializable
 {
-    public ?string $risk = null;
-    public ?string $country = null;
+    public $risk = null;
+    public $country = null;
     public $breakdown = null;
 
     public function __construct($response)
@@ -60,8 +60,8 @@ class CountryRisk implements \JsonSerializable
 
 class PoliticalExposureRisk implements \JsonSerializable
 {
-    public ?string $risk;
-    public ?string $checkId;
+    public $risk;
+    public $checkId;
 
     public function __construct($response)
     {
@@ -80,10 +80,10 @@ class PoliticalExposureRisk implements \JsonSerializable
 
 class OccupationRisk implements \JsonSerializable
 {
-    public ?string $risk;
-    public ?string $checkId;
-    public ?string $occupationCategory;
-    public ?string $occupationTitle;
+    public $risk;
+    public $checkId;
+    public $occupationCategory;
+    public $occupationTitle;
 
     public function __construct($response)
     {
@@ -106,8 +106,8 @@ class OccupationRisk implements \JsonSerializable
 
 class WatchlistRisk implements \JsonSerializable
 {
-    public ?string $risk;
-    public ?string $checkId;
+    public $risk;
+    public $checkId;
 
     public function __construct($response)
     {

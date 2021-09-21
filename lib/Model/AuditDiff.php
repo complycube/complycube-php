@@ -4,7 +4,7 @@ namespace ComplyCube\Model;
 
 class AuditDiff implements \JsonSerializable
 {
-    public ?string $action;
+    public $action;
     public $path = [];
     public $old;
     public $new;

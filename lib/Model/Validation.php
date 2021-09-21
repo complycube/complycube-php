@@ -6,9 +6,9 @@ use \stdClass;
 
 class Validation implements \JsonSerializable
 {
-    public string $outcome;
-    public ?string $matchId = null;
-    public ?string $comment = null;
+    public $outcome;
+    public $matchId = null;
+    public $comment = null;
 
     public function __construct(string $outcome)
     {

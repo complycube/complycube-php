@@ -6,11 +6,11 @@ use \stdClass;
 
 class Webhook implements \JsonSerializable
 {
-    public ?string $id = null;
-    public ?bool $enabled = null;
-    public ?string $description = null;
-    public ?string $url = null;
-    public ?string $secret = null;
+    public $id = null;
+    public $enabled = null;
+    public $description = null;
+    public $url = null;
+    public $secret = null;
     public $events = null;
 
     public function load(stdClass $response)

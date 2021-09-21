@@ -6,11 +6,11 @@ use \stdClass;
 
 class Document implements \JsonSerializable
 {
-    public ?string $id = null;
-    public ?string $clientId = null;
-    public ?string $type = null;
-    public ?string $classification = null;
-    public ?string $issuingCountry = null;
+    public $id = null;
+    public $clientId = null;
+    public $type = null;
+    public $classification = null;
+    public $issuingCountry = null;
     protected $createdAt;
     protected $updatedAt;
 

@@ -4,11 +4,11 @@ namespace ComplyCube\Model;
 
 class TeamMember implements \JsonSerializable
 {
-    public ?string $id = null;
-    public ?string $firstName = null;
-    public ?string $lastName = null;
-    public ?string $role = null;
-    public ?string $createdAt = null;
+    public $id = null;
+    public $firstName = null;
+    public $lastName = null;
+    public $role = null;
+    public $createdAt = null;
 
     public function load(\stdClass $response)
     {

@@ -4,12 +4,12 @@ namespace ComplyCube\Model;
 
 class AuditLog implements \JsonSerializable
 {
-    public ?string $id = null;
-    public ?string $member = null;
-    public ?string $resourceType = null;
-    public ?string $clientId = null;
-    public ?string $trigger = null;
-    public ?string $action = null;
+    public $id = null;
+    public $member = null;
+    public $resourceType = null;
+    public $clientId = null;
+    public $trigger = null;
+    public $action = null;
     public $createdAt = null;
     public $diff = array();
 

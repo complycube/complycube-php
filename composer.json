@@ -17,9 +17,9 @@
         }
     ],
     "require": {
-        "php": "^7.4",
-        "caseyamcl/guzzle_retry_middleware": "^2.6",
-        "guzzlehttp/guzzle": "^7.0"
+        "php": ">=7.3",
+        "caseyamcl/guzzle_retry_middleware": ">=2.6",
+        "guzzlehttp/guzzle": ">=7.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.17",

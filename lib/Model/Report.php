@@ -6,8 +6,8 @@ use \stdClass;
 
 class Report implements \JsonSerializable
 {
-    public ?string $contentType = null;
-    public ?string $data = null;
+    public $contentType = null;
+    public $data = null;
 
     public function load(stdClass $response)
     {

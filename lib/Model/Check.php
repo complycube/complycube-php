@@ -6,14 +6,14 @@ use \stdClass;
 
 class Check implements \JsonSerializable
 {
-    public ?string $id = null;
-    public ?string $clientId = null;
-    public ?bool $enableMonitoring = false;
-    public ?string $documentId = null;
-    public ?string $livePhotoId = null;
-    public ?string $entityName = null;
-    public ?string $type = null;
-    public ?string $status = null;
+    public $id = null;
+    public $clientId = null;
+    public $enableMonitoring = false;
+    public $documentId = null;
+    public $livePhotoId = null;
+    public $entityName = null;
+    public $type = null;
+    public $status = null;
     public $result;
     protected $createdAt;
     protected $updatedAt;

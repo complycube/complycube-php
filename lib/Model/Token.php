@@ -6,7 +6,7 @@ use \stdClass;
 
 class Token implements \JsonSerializable
 {
-    public ?string $token = null;
+    public $token = null;
 
     public function load(stdClass $response)
     {
