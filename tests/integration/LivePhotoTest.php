@@ -50,8 +50,10 @@ class LivePhotoTest extends \PHPUnit\Framework\TestCase
     {
         $image = new Image();
         $image->data = file_get_contents("./tests/fixtures/encoded-20200609153459.txt", "r");
+        $image->performLivenessCheck = false;
         $result = $this->complycube->livephotos()->upload($clientId, $image);
         $this->assertEquals($clientId, $result->clientId);
+        $this->assertEquals(false, $result->performLivenessCheck);
         return $result->id;
     }
     
@@ -61,8 +63,9 @@ class LivePhotoTest extends \PHPUnit\Framework\TestCase
     public function testUploadLivePhotoInline($clientId): string
     {
         $image = file_get_contents("./tests/fixtures/encoded-20200609153459.txt", "r");
-        $result = $this->complycube->livephotos()->upload($clientId, ['data' => $image]);
+        $result = $this->complycube->livephotos()->upload($clientId, ['data' => $image, 'performLivenessCheck' => false]);
         $this->assertEquals($clientId, $result->clientId);
+        $this->assertEquals(false, $result->performLivenessCheck);
         return $result->id;
     }
 
@@ -73,16 +76,6 @@ class LivePhotoTest extends \PHPUnit\Framework\TestCase
     {
         $img = $this->complycube->livephotos()->download($livePhotoId);
         $this->assertEquals('images/jpg', $img->contentType);
-    }
-
-    /**
-    * @depends testUploadLivePhoto
-    */
-    public function atestDeleteLivePhoto($livePhotoId)
-    {
-        $this->expectException(\ComplyCube\Exception\ComplyCubeClientException::class);
-        $this->complycube->livephotos()->delete($livePhotoId);
-        $this->complycube->livephotos()->get($livePhotoId);
     }
 
     /**
@@ -104,5 +97,15 @@ class LivePhotoTest extends \PHPUnit\Framework\TestCase
         $this->testUploadLivePhoto($clientId);
         $photos = $this->complycube->livephotos()->list($clientId, ['page' => 1, 'pageSize' => 2]);
         $this->assertEquals(2, iterator_count($photos));
+    }
+
+    /**
+    * @depends testUploadLivePhoto
+    */
+    public function testDeleteLivePhoto($livePhotoId)
+    {
+        $this->expectException(\ComplyCube\Exception\ComplyCubeClientException::class);
+        $this->complycube->livephotos()->delete($livePhotoId);
+        $this->complycube->livephotos()->get($livePhotoId);
     }
 }
