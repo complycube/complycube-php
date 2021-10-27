@@ -1,6 +1,7 @@
 # Local Files
 .env
 index.php
+.DS_Store
 
 # Ignore PHPUnit coverage file
 clover.xml

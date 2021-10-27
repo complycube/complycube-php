@@ -25,8 +25,18 @@ class ClientTest extends \PHPUnit\Framework\TestCase
             $this->complycube = new ComplyCubeClient($apiKey);
         }
         $personDetails = new PersonDetails();
-        $personDetails->firstName = 'John';
+        $personDetails->firstName = 'Jane';
+        $personDetails->middleName = 'Middle';
         $personDetails->lastName = 'Smith';
+        $personDetails->dob = '1970-01-01';
+        $personDetails->gender = 'female';
+        $personDetails->nationality = 'GB';
+        $personDetails->birthCountry = 'US';
+        $personDetails->ssn = '111111111';
+        $personDetails->socialInsuranceNumber = 'SI00000000';
+        $personDetails->nationalIdentityNumber = 'NI00000000';
+        $personDetails->taxIdentificationNumber = 'TIN0000000';
+
         $newClient = new Client();
         $newClient->type = 'person';
         $newClient->email = 'john@doe.com';
@@ -46,8 +56,9 @@ class ClientTest extends \PHPUnit\Framework\TestCase
     {
         $result = $this->complycube->clients()->create(['type' => 'person',
                                                         'email' => 'john@doe.com',
-                                                        'personDetails' => ['firstName' => 'John',
-                                                                            'lastName' => 'Smith']]);
+                                                        'personDetails' => ['firstName' => 'Jane',
+                                                                            'lastName' => 'Smith',
+                                                                            'ssn' => '111111111']]);
                                                                             
         $this->assertEquals($this->personClient->personDetails->firstName, $result->personDetails->firstName);
         $this->assertEquals($this->personClient->personDetails->lastName, $result->personDetails->lastName);

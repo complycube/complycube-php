@@ -12,11 +12,14 @@ class ComplyCubeClient
     private $checkApi;
     private $documentApi;
     private $livePhotoApi;
+    private $liveVideoApi;
     private $riskProfileApi;
     private $webhookApi;
     private $tokenApi;
     private $teamMemberApi;
     private $auditLogApi;
+    private $accountInfo;
+    private $flowSessionApi;
     
     /**
      * Create a ComplyCubeClient API Client Instance for the provided
@@ -95,6 +98,20 @@ class ComplyCubeClient
             $this->livePhotoApi = new \ComplyCube\Resources\LivePhotoApi($this->apiClient);
         }
         return $this->livePhotoApi;
+    }
+
+    /**
+     * Live videos API allows you to upload, retrieve, download, and delete live photos.
+     * You can retrieve a specific live photo as well as a list all your client's live photos.
+     *
+     * @return \ComplyCube\Resources\LiveVideoApi
+     */
+    public function livevideos() : \ComplyCube\Resources\LiveVideoApi
+    {
+        if (empty($this->liveVideoApi)) {
+            $this->liveVideoApi = new \ComplyCube\Resources\LiveVideoApi($this->apiClient);
+        }
+        return $this->liveVideoApi;
     }
 
     /**
@@ -180,5 +197,42 @@ class ComplyCubeClient
             $this->auditLogApi = new \ComplyCube\Resources\AuditLogApi($this->apiClient);
         }
         return $this->auditLogApi;
+    }
+
+    /**
+     * Allows you to retrieve a list of all Sanctions and Watchlists available as part of a Screening Check.
+     *
+     * @return iterable
+     */
+    public function screeningLists() : iterable
+    {
+        $response = $this->apiClient->get('static/screeningLists');
+        return json_decode($response->getBody());
+    }
+
+    /**
+     * Account Info API allows you to get account info around usage and credits.
+     *
+     * @return \ComplyCube\Resources\AccountInfoApi
+     */
+    public function accountInfo() : \ComplyCube\Resources\AccountInfoApi
+    {
+        if (empty($this->accountInfoApi)) {
+            $this->accountInfoApi = new \ComplyCube\Resources\AccountInfoApi($this->apiClient);
+        }
+        return $this->accountInfoApi;
+    }
+
+    /**
+     * Flow API lets you create a unique ComplyCube URL address to redirect your clients 
+     *
+     * @return \ComplyCube\Resources\FlowSessionApi
+     */
+    public function flow() : \ComplyCube\Resources\FlowSessionApi
+    {
+        if (empty($this->flowSessionApi)) {
+            $this->flowSessionApi = new \ComplyCube\Resources\FlowSessionApi($this->apiClient);
+        }
+        return $this->flowSessionApi;
     }
 }

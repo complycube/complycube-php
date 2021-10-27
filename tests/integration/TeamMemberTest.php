@@ -39,7 +39,7 @@ class TeamMemberTest extends \PHPUnit\Framework\TestCase
 
     public function testGetNonExistentTeamMember()
     {
-        $this->expectException(\ComplyCube\Exception\ComplyCubeServerException::class);
+        $this->expectException(\ComplyCube\Exception\ComplyCubeClientException::class);
         $this->complycube->teamMembers()->get('NONEXISTENT');
     }
 

@@ -5,6 +5,7 @@ namespace ComplyCube\Tests\Integration;
 use ComplyCube\ApiClient;
 use ComplyCube\ComplyCubeClient;
 use ComplyCube\Model\Check;
+use ComplyCube\Model\CheckOptions;
 use ComplyCube\Model\Image;
 use ComplyCube\Model\Validation;
 use ComplyCube\Model\PersonDetails;
@@ -26,8 +27,8 @@ class CheckTest extends \PHPUnit\Framework\TestCase
         }
         
         $personDetails = new PersonDetails();
-        $personDetails->firstName = 'Don';
-        $personDetails->lastName = 'Juan';
+        $personDetails->firstName = 'John';
+        $personDetails->lastName = 'Doe';
         $personDetails->middleName = 'medium-risk';
 
         $newClient = new Client();
@@ -63,6 +64,19 @@ class CheckTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+    * @depends testCreatePersonClient
+    */
+    public function testCreateAddress($clientId): string
+    {
+        $testAddress = [ 'line' => '11 Something Avenue', 'city' => 'London', 'country' => 'GB'];
+        $result = $this->complycube->address()->create($clientId, $testAddress);
+        $this->assertEquals($testAddress['line'], $result->line);
+        $this->assertEquals($testAddress['city'], $result->city);
+        $this->assertEquals($testAddress['country'], $result->country);
+        return $result->id;
+    }
+
+    /**
     * @depends testCreateDocument
     */
     public function testUploadImageToDocument($documentId): Image
@@ -90,13 +104,42 @@ class CheckTest extends \PHPUnit\Framework\TestCase
         return $result->id;
     }
 
-    
     /**
     * @depends testCreatePersonClient
     */
-    public function testCreateSimpleCheck($clientId): string
+    public function testCreateExtensiveCheck($clientId): string
     {
         $result = $this->complycube->checks()->create($clientId, $this->check);
+        $this->assertObjectHasAttribute('id', $result);
+        $this->assertEquals($this->check->type, $result->type);
+        $this->assertEquals($clientId, $result->clientId);
+        return $result->id;
+    }
+
+    /**
+    * @depends testCreatePersonClient
+    */
+    public function testCreateStandardCheck($clientId): string
+    {
+        $simpleCheck = $this->check;
+        $simpleCheck->type = 'standard_screening_check';
+        $result = $this->complycube->checks()->create($clientId, $simpleCheck);
+        $this->assertObjectHasAttribute('id', $result);
+        $this->assertEquals($this->check->type, $result->type);
+        $this->assertEquals($clientId, $result->clientId);
+        return $result->id;
+    }
+
+    /**
+    * @depends testCreatePersonClient
+    */
+    public function testCreateStandardCheckWithOptions($clientId): string
+    {
+        $simpleCheck = $this->check;
+        $simpleCheck->type = 'standard_screening_check';
+        $checkOptions = new CheckOptions();
+        $checkOptions->screeningClassification = ['pepLevel1','watchlistSanctionsLists'];
+        $result = $this->complycube->checks()->create($clientId, $simpleCheck);
         $this->assertObjectHasAttribute('id', $result);
         $this->assertEquals($this->check->type, $result->type);
         $this->assertEquals($clientId, $result->clientId);
@@ -115,13 +158,27 @@ class CheckTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-    * @depends testCreateSimpleCheck
+    * @depends testCreateStandardCheck
     */
     public function testGetCheckById($id) : Check
     {
         $result = $this->complycube->checks()->get($id);
         $this->assertEquals($id, $result->id);
         return $result;
+    }
+
+    /**
+    * @depends testCreatePersonClient
+    * @depends testCreateDocument
+    * @depends testCreateAddress
+    */
+    public function testCreatePoACheck($clientId, $documentId, $addressId): string
+    {
+        $result = $this->complycube->checks()->create($clientId, ['type' => 'proof_of_address_check', 'documentId' => $documentId, 'addressId' => $addressId]);
+        $this->assertObjectHasAttribute('id', $result);
+        $this->assertEquals('proof_of_address_check', $result->type);
+        $this->assertEquals($clientId, $result->clientId);
+        return $result->id;
     }
 
     /**
@@ -165,7 +222,7 @@ class CheckTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-    * @depends testCreateSimpleCheck
+    * @depends testCreateStandardCheck
     */
     public function testUpdateCheck($id)
     {
@@ -186,8 +243,8 @@ class CheckTest extends \PHPUnit\Framework\TestCase
     */
     public function testList2ChecksOnly($clientId)
     {
-        $this->testCreateSimpleCheck($clientId);
-        $this->testCreateSimpleCheck($clientId);
+        $this->testCreateStandardCheck($clientId);
+        $this->testCreateStandardCheck($clientId);
         $checks = $this->complycube->checks()->list(['page' => 1, 'pageSize' => 2]);
         $this->assertEquals(2, iterator_count($checks));
     }
