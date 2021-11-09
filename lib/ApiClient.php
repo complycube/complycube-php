@@ -12,7 +12,7 @@ use ComplyCube\Exception\ComplyCubeServerException;
 class ApiClient
 {
     /** @var integer */
-    const VERSION = '1.0.0';
+    const VERSION = '1.1.2';
     
     /** @var string ComplyCube API key from developer dashboard */
     private $apiKey;
