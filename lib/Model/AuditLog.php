@@ -29,7 +29,7 @@ class AuditLog implements \JsonSerializable
         }
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'id' => $this->id,

@@ -27,7 +27,7 @@ class FlowSession implements \JsonSerializable
         $this->redirectUrl = isset($response->redirectUrl) ?  $response->redirectUrl : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'clientId' => $this->clientId,

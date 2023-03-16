@@ -21,7 +21,7 @@ class CompanyDetails implements \JsonSerializable
         $this->incorporationType = isset($response->incorporationType) ? $response->incorporationType : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'name' => $this->name,

@@ -23,7 +23,7 @@ class Webhook implements \JsonSerializable
         $this->enabled = isset($response->enabled) ? $response->enabled : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'id' => $this->id,

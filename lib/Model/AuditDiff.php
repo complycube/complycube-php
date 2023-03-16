@@ -17,7 +17,7 @@ class AuditDiff implements \JsonSerializable
         $this->new = isset($aDiff->new) ? $aDiff->new : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'action' => $this->action,

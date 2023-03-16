@@ -19,7 +19,7 @@ class TeamMember implements \JsonSerializable
         $this->createdAt = $response->createdAt;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'id' => $this->id,

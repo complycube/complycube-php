@@ -15,7 +15,7 @@ class Report implements \JsonSerializable
         $this->data = $response->data;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'contentType' => $this->contentType,

@@ -15,7 +15,7 @@ class Validation implements \JsonSerializable
         $this->outcome = $outcome;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'outcome' => $this->outcome,

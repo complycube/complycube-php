@@ -32,7 +32,7 @@ class PersonDetails implements \JsonSerializable
         $this->taxIdentificationNumber = isset($response->taxIdentificationNumber) ? $response->taxIdentificationNumber : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'firstName' => $this->firstName,

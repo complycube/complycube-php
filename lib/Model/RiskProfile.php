@@ -21,7 +21,7 @@ class RiskProfile implements \JsonSerializable
         $this->watchlistRisk = new WatchlistRisk($response->watchlistRisk);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'overall' => $this->overall,
@@ -48,7 +48,7 @@ class CountryRisk implements \JsonSerializable
         $this->breakdown = isset($response->breakdown) ? $response->breakdown : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'risk' => $this->risk,
@@ -69,7 +69,7 @@ class PoliticalExposureRisk implements \JsonSerializable
         $this->checkId = isset($response->checkId) ? $response->checkId : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'risk' => $this->risk,
@@ -93,7 +93,7 @@ class OccupationRisk implements \JsonSerializable
         $this->occupationTitle = isset($response->occupationTitle) ? $response->occupationTitle : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'risk' => $this->risk,
@@ -115,7 +115,7 @@ class WatchlistRisk implements \JsonSerializable
         $this->checkId = isset($response->checkId) ? $response->checkId : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'risk' => $this->risk,

@@ -9,7 +9,7 @@ class ScreeningListsScope implements \JsonSerializable
     public string $mode;
     public iterable $lists;
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'mode' => $this->mode,
@@ -29,7 +29,7 @@ class CheckOptions implements \JsonSerializable
     public ?int $minimumPermittedAge;
     public ?bool $clientDataValidation;
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'screeningListsScope' => $this->screeningListsScope,

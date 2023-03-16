@@ -15,7 +15,7 @@ class AccountInfo implements \JsonSerializable
         $this->remainingCredit = isset($response->remainingCredit) ?  $response->remainingCredit : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'username' => $this->username,

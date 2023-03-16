@@ -13,7 +13,7 @@ class Token implements \JsonSerializable
         $this->token = $response->token;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'token' => $this->token

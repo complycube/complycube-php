@@ -41,7 +41,7 @@ class Address implements \JsonSerializable
         $this->updatedAt = isset($response->updatedAt) ? $response->updatedAt : null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter([
             'id' => $this->id,
