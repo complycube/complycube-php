@@ -11,6 +11,7 @@ class ComplyCubeCollection implements \Iterator
     public $pages;
     public $pageSize;
     public $totalSize;
+    public $totalItems;
     private $position = 0;
 
     public function __construct(string $model, \stdClass $apiResponse)
