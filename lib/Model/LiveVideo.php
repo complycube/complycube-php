@@ -2,38 +2,28 @@
 
 namespace ComplyCube\Model;
 
-use \stdClass;
+use Carbon\Carbon;
+use stdClass;
 
-class LiveVideo implements \JsonSerializable
+class LiveVideo extends Model
 {
-    public ?string $id = null;
-    public ?string $clientId = null;
-    public ?string $language = null;
-    public $challenges = [];
-    protected $createdAt;
-    protected $updatedAt;
+    public ?string $id;
+    public ?string $clientId;
+    public ?string $language;
+    public ?array $challenges;
+    protected ?Carbon $createdAt;
+    protected ?Carbon $updatedAt;
 
-    public function load(stdClass $response)
+    public function load(stdClass $response): void
     {
-        $this->id = isset($response->id) ? $response->id : null;
-        $this->clientId = isset($response->clientId) ? $response->clientId : null;
-        $this->language = isset($response->language) ? $response->language : null;
-        $this->challenges = isset($response->challenges) ? $response->challenges : null;
-        $this->createdAt = isset($response->createdAt) ? $response->createdAt : null;
-        $this->updatedAt = isset($response->updatedAt) ? $response->updatedAt : null;
-    }
+        parent::load($response);
 
-    public function jsonSerialize()
-    {
-        return array_filter([
-            'id' => $this->id,
-            'clientId' => $this->clientId,
-            'language' => $this->language,
-            'challenges' => $this->challenges,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt
-        ], function ($value) {
-            return ($value !== null);
-        });
+        if (property_exists($response, "challenges")) {
+            foreach ($response->challenges as $challenge) {
+                $this->challenges[] = new Challenge($challenge);
+            }
+        } else {
+            $this->challenges = null;
+        }
     }
 }

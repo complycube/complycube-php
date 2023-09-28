@@ -2,21 +2,21 @@
 
 namespace ComplyCube\Tests\Integration;
 
-use ComplyCube\ApiClient;
 use ComplyCube\ComplyCubeClient;
-use ComplyCube\Model\TeamMember;
+use ComplyCube\Exception\ComplyCubeClientException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \ComplyCube\Resources\TeamMemberApi
  */
-class TeamMemberTest extends \PHPUnit\Framework\TestCase
+class TeamMemberTest extends TestCase
 {
-    private $complycube;
+    private ?ComplyCubeClient $complycube;
 
     protected function setUp(): void
     {
         if (empty($this->complycube)) {
-            $apiKey = getenv('CC_API_KEY');
+            $apiKey = getenv("CC_API_KEY");
             $this->complycube = new ComplyCubeClient($apiKey);
         }
     }
@@ -29,8 +29,8 @@ class TeamMemberTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-    * @depends testListTeamMembers
-    */
+     * @depends testListTeamMembers
+     */
     public function testGetTeamMember($teamMember)
     {
         $result = $this->complycube->teamMembers()->get($teamMember->id);
@@ -39,17 +39,19 @@ class TeamMemberTest extends \PHPUnit\Framework\TestCase
 
     public function testGetNonExistentTeamMember()
     {
-        $this->expectException(\ComplyCube\Exception\ComplyCubeClientException::class);
-        $this->complycube->teamMembers()->get('NONEXISTENT');
+        $this->expectException(ComplyCubeClientException::class);
+        $this->complycube->teamMembers()->get("NONEXISTENT");
     }
 
     /**
-    * @depends testListTeamMembers
-    */
+     * @depends testListTeamMembers
+     */
     public function testFilterTeamMember($teamMember)
     {
         $amember = $this->complycube->teamMembers()->get($teamMember->id);
-        $result = $this->complycube->teamMembers()->list(['role' => $amember->role]);
+        $result = $this->complycube
+            ->teamMembers()
+            ->list(["role" => $amember->role]);
         foreach ($result as $res) {
             $this->assertEquals($amember->role, $res->role);
         }

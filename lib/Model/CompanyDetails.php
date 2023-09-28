@@ -2,35 +2,50 @@
 
 namespace ComplyCube\Model;
 
-use \stdClass;
+use Carbon\Carbon;
+use stdClass;
 
-class CompanyDetails implements \JsonSerializable
+class CompanyDetails extends Model
 {
-    public $name;
-    public $website;
-    public $registrationNumber;
-    public $incorporationCountry;
-    public $incorporationType;
+    public ?string $id;
+    public ?string $name;
+    public ?string $registrationNumber;
+    public ?string $incorporationCountry;
+    public ?string $incorporationDate;
+    public ?string $incorporationType;
+    public ?Address $address;
+    public ?bool $active;
+    public ?string $sourceUrl;
+    public ?array $owners;
+    public ?array $officers;
+    public ?array $filings;
+    public ?array $industryCodes;
+    public ?string $website;
+    protected ?Carbon $createdAt;
+    protected ?Carbon $updatedAt;
 
-    public function load(stdClass $response)
+    public function load(stdClass $response): void
     {
-        $this->name = $response->name;
-        $this->website = isset($response->website) ? $response->website : null;
-        $this->registrationNumber = isset($response->registrationNumber) ? $response->registrationNumber : null;
-        $this->incorporationCountry = isset($response->incorporationCountry) ? $response->incorporationCountry : null;
-        $this->incorporationType = isset($response->incorporationType) ? $response->incorporationType : null;
-    }
+        parent::load($response);
 
-    public function jsonSerialize()
-    {
-        return array_filter([
-            'name' => $this->name,
-            'website' => $this->website,
-            'registrationNumber' => $this->registrationNumber,
-            'incorporationCountry' => $this->incorporationCountry,
-            'incorporationType' => $this->incorporationType
-        ], function ($value) {
-            return ($value !== null);
-        });
+        $this->address = property_exists($response, "address")
+            ? new Address($response->address)
+            : null;
+
+        $this->owners = property_exists($response, "owners")
+            ? $response->owners
+            : null;
+
+        $this->officers = property_exists($response, "officers")
+            ? $response->officers
+            : null;
+
+        $this->filings = property_exists($response, "filings")
+            ? $response->filings
+            : null;
+
+        $this->industryCodes = property_exists($response, "industryCodes")
+            ? $response->industryCodes
+            : null;
     }
 }

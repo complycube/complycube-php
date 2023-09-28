@@ -2,25 +2,24 @@
 
 namespace ComplyCube\Model;
 
-use \stdClass;
+use stdClass;
 
-class ScreeningListsScope implements \JsonSerializable
+class ScreeningListsScope extends Model
 {
-    public string $mode;
-    public iterable $lists;
+    public ?string $mode;
+    public ?iterable $lists;
 
-    public function jsonSerialize()
+    public function load(stdClass $response): void
     {
-        return array_filter([
-            'mode' => $this->mode,
-            'lists' => $this->lists
-        ], function ($value) {
-            return ($value !== null);
-        });
+        parent::load($response);
+
+        $this->lists = property_exists($response, "lists")
+            ? $response->lists
+            : null;
     }
 }
 
-class CheckOptions implements \JsonSerializable
+class CheckOptions extends Model
 {
     public ?ScreeningListsScope $screeningListsScope;
     public ?string $screeningNameSearchMode;
@@ -29,17 +28,24 @@ class CheckOptions implements \JsonSerializable
     public ?int $minimumPermittedAge;
     public ?bool $clientDataValidation;
 
-    public function jsonSerialize()
+    public function load(stdClass $response): void
     {
-        return array_filter([
-            'screeningListsScope' => $this->screeningListsScope,
-            'screeningNameSearchMode' => $this->screeningNameSearchMode,
-            'screeningClassification' => $this->screeningClassification,
-            'analysisCoverage' => $this->analysisCoverage,
-            'minimumPermittedAge' => $this->minimumPermittedAge,
-            'clientDataValidation' => $this->clientDataValidation
-        ], function ($value) {
-            return ($value !== null);
-        });
+        $this->screeningListsScope = property_exists(
+            $response,
+            "screeningListsScope"
+        )
+            ? new ScreeningListsScope($response->screeningListsScope)
+            : null;
+
+        $this->screeningClassification = property_exists(
+            $response,
+            "screeningClassification"
+        )
+            ? $response->screeningClassification
+            : null;
+
+        $this->analysisCoverage = property_exists($response, "analysisCoverage")
+            ? $response->analysisCoverage
+            : null;
     }
 }

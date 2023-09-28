@@ -2,27 +2,9 @@
 
 namespace ComplyCube\Model;
 
-class AccountInfo implements \JsonSerializable
+class AccountInfo extends Model
 {
-    public string $username;
-    public string $plan;
-    public ?string $remainingCredit = null;
-
-    public function load(\stdClass $response)
-    {
-        $this->username = $response->username;
-        $this->plan = $response->plan;
-        $this->remainingCredit = isset($response->remainingCredit) ?  $response->remainingCredit : null;
-    }
-
-    public function jsonSerialize()
-    {
-        return array_filter([
-            'username' => $this->username,
-            'plan' => $this->plan,
-            'remainingCredit' => $this->remainingCredit
-        ], function ($value) {
-            return ($value !== null);
-        });
-    }
+    public ?string $username;
+    public ?string $plan;
+    public ?int $remainingCredit;
 }

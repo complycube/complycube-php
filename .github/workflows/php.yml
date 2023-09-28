@@ -7,8 +7,8 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        operating-system: [ubuntu-18.04, ubuntu-20.04]
-        php-versions: ['7.4']
+        operating-system: [ubuntu-latest, ubuntu-20.04]
+        php-versions: ["7.4", "8.1", "8.2"]
 
     runs-on: ${{ matrix.operating-system }}
 
@@ -23,6 +23,9 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
+      - name: Update lock file
+        run: composer update
+
       - name: Cache Composer packages
         id: composer-cache
         uses: actions/cache@v2
@@ -34,7 +37,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer install --prefer-dist --no-progress 
+        run: composer install --prefer-dist --no-progress
 
       - name: Run test suites
         run: ./vendor/bin/phpunit --coverage-clover coverage.xml

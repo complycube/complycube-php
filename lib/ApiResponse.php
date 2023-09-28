@@ -7,13 +7,13 @@ use \stdClass;
 class ApiResponse
 {
     /** @var integer */
-    protected $httpStatusCode;
+    protected int $httpStatusCode;
     /** @var string */
-    protected $body;
+    protected ?string $body;
     /** @var stdClass */
     protected $decodedBody;
     /** @var array<string> */
-    protected $headers;
+    protected array $headers;
 
     /**
      * Api response.
@@ -22,8 +22,11 @@ class ApiResponse
      * @param string|null $body
      * @param array $headers
      */
-    public function __construct(int $httpStatusCode, ?string $body = null, array $headers = [])
-    {
+    public function __construct(
+        int $httpStatusCode,
+        ?string $body = null,
+        array $headers = []
+    ) {
         $this->httpStatusCode = $httpStatusCode;
         $this->body = $body;
         $this->headers = $headers;
@@ -78,14 +81,16 @@ class ApiResponse
     private function decodeBody(): void
     {
         if (empty($this->body) || $this->body === null) {
-            $this->decodedBody = (objecT)[];
+            $this->decodedBody = (object) [];
             return;
         }
 
         $this->decodedBody = json_decode($this->body);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \JsonException('The body of the response could not be decoded as JSON.');
+            throw new \JsonException(
+                "The body of the response could not be decoded as JSON."
+            );
         }
     }
 }

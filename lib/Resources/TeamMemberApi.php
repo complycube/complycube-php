@@ -2,15 +2,19 @@
 
 namespace ComplyCube\Resources;
 
-class TeamMemberApi extends \ComplyCube\ApiResource
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
+use ComplyCube\ResourceActions\GetResource;
+use ComplyCube\ResourceActions\ListResource;
+
+class TeamMemberApi extends ApiResource
 {
-    const ENDPOINT = 'teamMembers';
+    const ENDPOINT = "teamMembers";
 
-    use \ComplyCube\ResourceActions\GetResource;
-    use \ComplyCube\ResourceActions\ListResource;
+    use GetResource, ListResource;
 
-    public function __construct(\ComplyCube\ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient)
     {
-        parent::__construct($apiClient, '\ComplyCube\Model\TeamMember');
+        parent::__construct($apiClient, "\ComplyCube\Model\TeamMember");
     }
 }

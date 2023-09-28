@@ -2,46 +2,31 @@
 
 namespace ComplyCube\Model;
 
-class AuditLog implements \JsonSerializable
-{
-    public ?string $id = null;
-    public ?string $member = null;
-    public ?string $resourceType = null;
-    public ?string $clientId = null;
-    public ?string $trigger = null;
-    public ?string $action = null;
-    public $createdAt = null;
-    public $diff = array();
+use Carbon\Carbon;
+use stdClass;
 
-    public function load(\stdClass $response)
+class AuditLog extends Model
+{
+    public ?string $id;
+    public ?string $memberId;
+    public ?string $resourceType;
+    public ?string $resourceId;
+    public ?string $clientId;
+    public ?string $trigger;
+    public ?string $action;
+    public ?array $diff;
+    public ?Carbon $createdAt;
+
+    public function load(stdClass $response): void
     {
-        $this->id = $response->id;
-        $this->member = isset($response->member) ? $response->member : null;
-        $this->resourceType = $response->resourceType;
-        $this->clientId = $response->clientId;
-        $this->trigger = $response->trigger;
-        $this->action = $response->action;
-        $this->createdAt = new \DateTime($response->createdAt);
+        parent::load($response);
+
         if (isset($response->diff)) {
             foreach ($response->diff as $aDiff) {
-                $diff[] = new AuditDiff($aDiff);
+                $this->diff[] = new AuditDiff($aDiff);
             }
+        } else {
+            $this->diff = null;
         }
-    }
-
-    public function jsonSerialize()
-    {
-        return array_filter([
-            'id' => $this->id,
-            'member' => $this->member,
-            'resourceType' => $this->resourceType,
-            'clientId' => $this->clientId,
-            'trigger' => $this->trigger,
-            'action' => $this->action,
-            'createdAt' => $this->createdAt,
-            
-        ], function ($value) {
-            return ($value !== null);
-        });
     }
 }

@@ -2,31 +2,33 @@
 
 namespace ComplyCube\Tests\Integration;
 
-use ComplyCube\ApiClient;
 use ComplyCube\ComplyCubeClient;
-use ComplyCube\Model\PersonDetails;
-use ComplyCube\Model\LiveVideo;
+use ComplyCube\Exception\ComplyCubeClientException;
 use ComplyCube\Model\Client;
+use ComplyCube\Model\LiveVideo;
+use ComplyCube\Model\PersonDetails;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \ComplyCube\Resources\LiveVideoApi
  */
-class LiveVideoTest extends \PHPUnit\Framework\TestCase
+class LiveVideoTest extends TestCase
 {
-    private $complycube;
+    private ?ComplyCubeClient $complycube;
+    private ?Client $personClient;
 
     protected function setUp(): void
     {
         if (empty($this->complycube)) {
-            $apiKey = getenv('CC_API_KEY');
+            $apiKey = getenv("CC_API_KEY");
             $this->complycube = new ComplyCubeClient($apiKey);
         }
         $personDetails = new PersonDetails();
-        $personDetails->firstName = 'John';
-        $personDetails->lastName = 'Doe';
+        $personDetails->firstName = "John";
+        $personDetails->lastName = "Doe";
         $newClient = new Client();
-        $newClient->type = 'person';
-        $newClient->email = 'john@doe.com';
+        $newClient->type = "person";
+        $newClient->email = "john@doe.com";
         $newClient->personDetails = $personDetails;
         $this->personClient = $newClient;
     }
@@ -34,19 +36,29 @@ class LiveVideoTest extends \PHPUnit\Framework\TestCase
     public function testCreatePersonForVideo(): string
     {
         $result = $this->complycube->clients()->create($this->personClient);
-        $this->assertEquals($this->personClient->personDetails->firstName, $result->personDetails->firstName);
-        $this->assertEquals($this->personClient->personDetails->lastName, $result->personDetails->lastName);
+        $this->assertEquals(
+            $this->personClient->personDetails->firstName,
+            $result->personDetails->firstName
+        );
+        $this->assertEquals(
+            $this->personClient->personDetails->lastName,
+            $result->personDetails->lastName
+        );
         $this->assertEquals($this->personClient->email, $result->email);
         $this->assertEquals($this->personClient->type, $result->type);
         return $result->id;
     }
 
     /**
-    * @depends testCreatePersonForVideo
-    */
+     * @depends testCreatePersonForVideo
+     */
     public function testCreateLiveVideo($clientId): string
     {
-        $response = $this->complycube->apiClient->post('liveVideos',[], ['clientId' => $clientId]);
+        $response = $this->complycube->apiClient->post(
+            "liveVideos",
+            [],
+            ["clientId" => $clientId]
+        );
         $lv = new LiveVideo();
         $lv->load($response->getDecodedBody());
         $this->assertEquals($clientId, $lv->clientId);
@@ -57,9 +69,9 @@ class LiveVideoTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-    * @depends testCreatePersonForVideo
-    * @depends testCreateLiveVideo
-    */
+     * @depends testCreatePersonForVideo
+     * @depends testCreateLiveVideo
+     */
     public function testGetLiveVideo($clientId, $liveVideoId)
     {
         $lv = new LiveVideo();
@@ -70,10 +82,10 @@ class LiveVideoTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($result->challenges);
         $this->assertGreaterThan(0, count($result->challenges));
     }
-    
+
     /**
-    * @depends testCreatePersonForVideo
-    */
+     * @depends testCreatePersonForVideo
+     */
     public function testListLiveVideo($clientId)
     {
         $this->testCreateLiveVideo($clientId);
@@ -82,11 +94,11 @@ class LiveVideoTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-    * @depends testCreateLiveVideo
-    */
+     * @depends testCreateLiveVideo
+     */
     public function testDeleteLivePhoto($liveVideoId)
     {
-        $this->expectException(\ComplyCube\Exception\ComplyCubeClientException::class);
+        $this->expectException(ComplyCubeClientException::class);
         $this->complycube->livevideos()->delete($liveVideoId);
         $this->complycube->livevideos()->get($liveVideoId);
     }

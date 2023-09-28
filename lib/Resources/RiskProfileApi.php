@@ -2,23 +2,31 @@
 
 namespace ComplyCube\Resources;
 
-class RiskProfileApi extends \ComplyCube\ApiResource
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
+use ComplyCube\Model\RiskProfile;
+use ComplyCube\ResourceActions\GetResource;
+
+class RiskProfileApi extends ApiResource
 {
-    const ENDPOINT = 'clients';
+    const ENDPOINT = "clients";
 
-    use \ComplyCube\ResourceActions\GetResource;
-
-    public function __construct(\ComplyCube\ApiClient $apiClient)
-    {
-        parent::__construct($apiClient, '\ComplyCube\Model\RiskProfile');
+    use GetResource {
+        GetResource::get as traitGet;
     }
 
-    use \ComplyCube\ResourceActions\GetResource {
-        \ComplyCube\ResourceActions\GetResource::get as traitGet;
+    public function __construct(ApiClient $apiClient)
+    {
+        parent::__construct($apiClient, "\ComplyCube\Model\RiskProfile");
     }
 
-    public function get(string $id)
+    /**
+     * @param string $id risk profile id
+     * @return RiskProfile
+     */
+
+    public function get(string $id): RiskProfile
     {
-        return $this->traitGet($id.'/riskProfile');
+        return $this->traitGet($id . "/riskProfile");
     }
 }

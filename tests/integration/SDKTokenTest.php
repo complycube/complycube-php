@@ -2,36 +2,37 @@
 
 namespace ComplyCube\Tests\Integration;
 
-use ComplyCube\ApiClient;
 use ComplyCube\ComplyCubeClient;
-use ComplyCube\Model\Report;
+use ComplyCube\Exception\ComplyCubeClientException;
 use ComplyCube\Model\Client;
-use ComplyCube\Model\PersonDetails;
+use ComplyCube\Model\Token;
+use PHPUnit\Framework\TestCase;
+use TypeError;
 
 /**
  * @covers \ComplyCube\Resources\TokenApi
  */
-class SDKTokenTest extends \PHPUnit\Framework\TestCase
+class SDKTokenTest extends TestCase
 {
-    private $complycube;
-    private $personClient;
+    private ?ComplyCubeClient $complycube;
+    private ?Client $personClient;
 
     protected function setUp(): void
     {
         if (empty($this->complycube)) {
-            $apiKey = getenv('CC_API_KEY');
+            $apiKey = getenv("CC_API_KEY");
             $this->complycube = new ComplyCubeClient($apiKey);
         }
 
         if (empty($this->personClient)) {
-            $personDetails = new PersonDetails();
-            $personDetails->firstName = 'Richard';
-            $personDetails->lastName = 'Nixon';
-            $newClient = new Client();
-            $newClient->type = 'person';
-            $newClient->email = 'john@doe.com';
-            $newClient->personDetails = $personDetails;
-            $this->personClient = $newClient;
+            $this->personClient = new Client([
+                "type" => "person",
+                "email" => "john@doe.com",
+                "personDetails" => [
+                    "firstName" => "Richard",
+                    "lastName" => "Nixon",
+                ],
+            ]);
         }
     }
 
@@ -45,9 +46,67 @@ class SDKTokenTest extends \PHPUnit\Framework\TestCase
     /**
      * @depends testCreatePersonClient
      */
-    public function testGenerateToken(string $clientId): void
+    public function testGenerateWebSDKToken(string $clientId): void
     {
-        $result = $this->complycube->tokens()->generate($clientId, 'https://referrer.com/*');
-        $this->assertNotNull($result->token);
+        $result = $this->complycube
+            ->tokens()
+            ->generate($clientId, "https://referrer.com/*");
+
+        $this->assertInstanceOf(Token::class, $result);
+    }
+
+    /**
+     * @depends testCreatePersonClient
+     */
+    public function testGenerateMobileSDKToken(string $clientId): void
+    {
+        $result = $this->complycube
+            ->tokens()
+            ->generate($clientId, "com.myapp.demo.app");
+
+        $this->assertInstanceOf(Token::class, $result);
+    }
+
+    /**
+     * @depends testCreatePersonClient
+     */
+    public function testGenerateWebSDKTokenWithInvalidClientId(
+        string $clientId
+    ): void {
+        $this->expectException(ComplyCubeClientException::class);
+        $this->complycube
+            ->tokens()
+            ->generate("non existent client id", "https://referrer.com/*");
+    }
+
+    /**
+     * @depends testCreatePersonClient
+     */
+    public function testGenerateMobileSDKTokenWithInvalidClientId(
+        string $clientId
+    ): void {
+        $this->expectException(ComplyCubeClientException::class);
+        $this->complycube
+            ->tokens()
+            ->generate("non existent client id", "com.myapp.demo.app");
+    }
+
+    /**
+     * @depends testCreatePersonClient
+     */
+    public function testGenerateTokenWithInvalidReferrerOrAppId(
+        string $clientId
+    ): void {
+        $this->expectException(ComplyCubeClientException::class);
+        $this->complycube->tokens()->generate($clientId, "random stuff");
+    }
+
+    /**
+     * @depends testCreatePersonClient
+     */
+    public function testGenerateTokenWithNullSDKInfo(string $clientId): void
+    {
+        $this->expectException(TypeError::class);
+        $this->complycube->tokens()->generate($clientId, null);
     }
 }
