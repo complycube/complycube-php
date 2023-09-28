@@ -16,7 +16,7 @@ class ApiClient
 {
     /** @var integer */
     const VERSION = "1.1.3";
-
+  
     /** @var string ComplyCube API key from developer dashboard */
     private string $apiKey;
 
