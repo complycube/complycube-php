@@ -2,26 +2,31 @@
 
 namespace ComplyCube\Resources;
 
-class FlowSessionApi extends \ComplyCube\ApiResource
-{
-    const ENDPOINT = 'flow/sessions';
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
+use ComplyCube\Model\FlowSession;
+use ComplyCube\ResourceActions\CreateResource;
 
-    public function __construct(\ComplyCube\ApiClient $apiClient)
-    {
-        parent::__construct($apiClient, '\ComplyCube\Model\FlowSession');
+class FlowSessionApi extends ApiResource
+{
+    const ENDPOINT = "flow/sessions";
+
+    use CreateResource {
+        CreateResource::create as traitCreate;
     }
 
-    use \ComplyCube\ResourceActions\CreateResource {
-        \ComplyCube\ResourceActions\CreateResource::create as traitCreate;
+    public function __construct(ApiClient $apiClient)
+    {
+        parent::__construct($apiClient, "\ComplyCube\Model\FlowSession");
     }
 
     /**
      * Creates a new Flow Session.
      *
-     * @param $flowSession session options to use.
+     * @param mixed $flowSession session options to use.
      * @return FlowSession
      */
-    public function createSession($flowSession)
+    public function createSession($flowSession): FlowSession
     {
         return $this->traitCreate($flowSession);
     }

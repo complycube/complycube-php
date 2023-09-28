@@ -2,11 +2,20 @@
 
 namespace ComplyCube\ResourceActions;
 
+use ComplyCube\Model\ComplyCubeCollection;
+
 trait ListResource
 {
-    public function list($queryParams = [], $options = []): \ComplyCube\Model\ComplyCubeCollection
+    public function list($queryParams = [], $options = []): ComplyCubeCollection
     {
-        $response = $this->apiClient->get($this::ENDPOINT, array_merge(['query' => $queryParams], $options));
-        return new \ComplyCube\Model\ComplyCubeCollection($this->resourceClass, $response->getDecodedBody());
+        return new ComplyCubeCollection(
+            $this->resourceClass,
+            $this->apiClient
+                ->get(
+                    $this::ENDPOINT,
+                    array_merge(["query" => $queryParams], $options)
+                )
+                ->getDecodedBody()
+        );
     }
 }

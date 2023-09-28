@@ -2,32 +2,40 @@
 
 namespace ComplyCube\Resources;
 
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
+use ComplyCube\Model\ComplyCubeCollection;
 use ComplyCube\Model\Image;
+use ComplyCube\ResourceActions\CreateResource;
+use ComplyCube\ResourceActions\DeleteResource;
+use ComplyCube\ResourceActions\GetResource;
+use ComplyCube\ResourceActions\ListResource;
+use ComplyCube\ResourceActions\UpdateResource;
 
-class LivePhotoApi extends \ComplyCube\ApiResource
+class LivePhotoApi extends ApiResource
 {
-    const ENDPOINT = 'livePhotos';
+    const ENDPOINT = "livePhotos";
 
-    use \ComplyCube\ResourceActions\GetResource;
-    use \ComplyCube\ResourceActions\CreateResource;
-    use \ComplyCube\ResourceActions\UpdateResource;
-    use \ComplyCube\ResourceActions\DeleteResource;
-    use \ComplyCube\ResourceActions\ListResource;
+    use GetResource, UpdateResource, DeleteResource;
 
-    public function __construct(\ComplyCube\ApiClient $apiClient)
+    use CreateResource {
+        CreateResource::create as traitCreate;
+    }
+
+    use ListResource {
+        ListResource::list as traitList;
+    }
+
+    public function __construct(ApiClient $apiClient)
     {
-        parent::__construct($apiClient, '\ComplyCube\Model\Image');
+        parent::__construct($apiClient, "\ComplyCube\Model\Image");
     }
 
-    use \ComplyCube\ResourceActions\CreateResource {
-        \ComplyCube\ResourceActions\CreateResource::create as traitCreate;
-    }
-    
     /**
      * Upload livephoto of a client.
      *
      * @param string $clientId of the client being uploaded.
-     * @param $img object/array of image detail.
+     * @param mixed $img object/array of image detail.
      * @return Image
      */
     public function upload(string $clientId, $img): Image
@@ -48,23 +56,21 @@ class LivePhotoApi extends \ComplyCube\ApiResource
      */
     public function download(string $id): Image
     {
-        return $this->get($id . '/download');
-    }
-
-    use \ComplyCube\ResourceActions\ListResource {
-        \ComplyCube\ResourceActions\ListResource::list as traitList;
+        return $this->get($id . "/download");
     }
 
     /**
      * List all existing live photos for a given client.
      *
      * @param string $clientId of the client.
-     * @param array $queryParams for pagination and filtering.
-     * @return void
+     * @param mixed $queryParams for pagination and filtering.
+     * @return ComplyCubeCollection
      */
-    public function list(string $clientId, $queryParams = [])
-    {
-        $queryParams['clientId'] = $clientId;
+    public function list(
+        string $clientId,
+        $queryParams = []
+    ): ComplyCubeCollection {
+        $queryParams["clientId"] = $clientId;
         return $this->traitList($queryParams);
     }
 }

@@ -21,6 +21,9 @@ coverage_html
 /node_modules
 package-lock.json
 package.json
+composer.lock
+.github/workflows/php.yml
+README.md
 
 # phpDocumenter
 .phpdoc/*

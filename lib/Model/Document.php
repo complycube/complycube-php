@@ -2,41 +2,30 @@
 
 namespace ComplyCube\Model;
 
-use \stdClass;
+use Carbon\Carbon;
+use stdClass;
 
-class Document implements \JsonSerializable
+class Document extends Model
 {
-    public ?string $id = null;
-    public ?string $clientId = null;
-    public ?string $type = null;
-    public ?string $classification = null;
-    public ?string $issuingCountry = null;
-    protected $createdAt;
-    protected $updatedAt;
+    public ?string $id;
+    public ?string $clientId;
+    public ?string $type;
+    public ?string $classification;
+    public ?string $issuingCountry;
+    public ?array $images;
+    protected ?Carbon $createdAt;
+    protected ?Carbon $updatedAt;
 
-    public function load(stdClass $response)
+    public function load(stdClass $response): void
     {
-        $this->id = $response->id;
-        $this->clientId = $response->clientId;
-        $this->type = $response->type;
-        $this->classification = isset($response->classification) ?  $response->classification : null;
-        $this->issuingCountry = isset($response->issuingCountry) ?  $response->issuingCountry : null;
-        $this->createdAt = isset($response->createdAt) ? $response->createdAt : null;
-        $this->updatedAt = isset($response->updatedAt) ? $response->updatedAt : null;
-    }
+        parent::load($response);
 
-    public function jsonSerialize()
-    {
-        return array_filter([
-            'id' => $this->id,
-            'clientId' => $this->clientId,
-            'type' => $this->type,
-            'classification' => $this->classification,
-            'issuingCountry' => $this->issuingCountry,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt
-        ], function ($value) {
-            return ($value !== null);
-        });
+        if (property_exists($response, "images")) {
+            foreach ($response->images as $image) {
+                $this->images[] = new Image($image);
+            }
+        } else {
+            $this->images = null;
+        }
     }
 }

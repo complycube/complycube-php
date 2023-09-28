@@ -2,21 +2,20 @@
 
 namespace ComplyCube\Tests\Integration;
 
-use ComplyCube\ApiClient;
 use ComplyCube\ComplyCubeClient;
-use ComplyCube\Model\Report;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \ComplyCube\ComplyCubeClient
  */
-class StaticTest extends \PHPUnit\Framework\TestCase
+class StaticTest extends TestCase
 {
-    private $complycube;
+    private ?ComplyCubeClient $complycube;
 
     protected function setUp(): void
     {
         if (empty($this->complycube)) {
-            $apiKey = getenv('CC_API_KEY');
+            $apiKey = getenv("CC_API_KEY");
             $this->complycube = new ComplyCubeClient($apiKey);
         }
     }
@@ -24,6 +23,14 @@ class StaticTest extends \PHPUnit\Framework\TestCase
     public function testScreeningLists(): void
     {
         $result = $this->complycube->screeningLists();
+        $this->assertIsIterable($result);
+        $this->assertGreaterThan(0, count($result));
+    }
+
+    public function testSupportedDocuments(): void
+    {
+        $result = $this->complycube->supportedDocuments();
+        $this->assertIsIterable($result);
         $this->assertGreaterThan(0, count($result));
     }
 }

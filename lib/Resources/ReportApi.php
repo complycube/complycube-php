@@ -2,17 +2,20 @@
 
 namespace ComplyCube\Resources;
 
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
 use ComplyCube\Model\Report;
+use ComplyCube\ResourceActions\GetResource;
 
-class ReportApi extends \ComplyCube\ApiResource
+class ReportApi extends ApiResource
 {
-    const ENDPOINT = 'reports';
+    const ENDPOINT = "reports";
 
-    use \ComplyCube\ResourceActions\GetResource;
+    use GetResource;
 
-    public function __construct(\ComplyCube\ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient)
     {
-        parent::__construct($apiClient, '\ComplyCube\Model\Report');
+        parent::__construct($apiClient, "\ComplyCube\Model\Report");
     }
 
     /**
@@ -23,6 +26,6 @@ class ReportApi extends \ComplyCube\ApiResource
      */
     public function generate(array $queryParams): Report
     {
-        return $this->get('', ['query'=> $queryParams]);
+        return $this->get("", ["query" => $queryParams]);
     }
 }

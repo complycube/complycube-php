@@ -2,35 +2,40 @@
 
 namespace ComplyCube\Resources;
 
-use ComplyCube\Model\LiveVideo;
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
+use ComplyCube\Model\ComplyCubeCollection;
+use ComplyCube\ResourceActions\DeleteResource;
+use ComplyCube\ResourceActions\GetResource;
+use ComplyCube\ResourceActions\ListResource;
 
-class LiveVideoApi extends \ComplyCube\ApiResource
+class LiveVideoApi extends ApiResource
 {
-    const ENDPOINT = 'liveVideos';
+    const ENDPOINT = "liveVideos";
 
-    use \ComplyCube\ResourceActions\GetResource;
-    use \ComplyCube\ResourceActions\DeleteResource;
-    use \ComplyCube\ResourceActions\ListResource;
+    use GetResource, DeleteResource;
 
-    public function __construct(\ComplyCube\ApiClient $apiClient)
-    {
-        parent::__construct($apiClient, '\ComplyCube\Model\LiveVideo');
+    use ListResource {
+        ListResource::list as traitList;
     }
 
-    use \ComplyCube\ResourceActions\ListResource {
-        \ComplyCube\ResourceActions\ListResource::list as traitList;
+    public function __construct(ApiClient $apiClient)
+    {
+        parent::__construct($apiClient, "\ComplyCube\Model\LiveVideo");
     }
 
     /**
      * List all existing live photos for a given client.
      *
      * @param string $clientId of the client.
-     * @param array $queryParams for pagination and filtering.
-     * @return void
+     * @param mixed $queryParams for pagination and filtering.
+     * @return ComplyCubeCollection
      */
-    public function list(string $clientId, $queryParams = [])
-    {
-        $queryParams['clientId'] = $clientId;
+    public function list(
+        string $clientId,
+        $queryParams = []
+    ): ComplyCubeCollection {
+        $queryParams["clientId"] = $clientId;
         return $this->traitList($queryParams);
     }
 }

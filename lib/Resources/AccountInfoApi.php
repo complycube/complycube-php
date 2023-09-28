@@ -2,14 +2,18 @@
 
 namespace ComplyCube\Resources;
 
-class AccountInfoApi extends \ComplyCube\ApiResource
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
+use ComplyCube\ResourceActions\GetDirectResource;
+
+class AccountInfoApi extends ApiResource
 {
-    const ENDPOINT = 'accountInfo';
+    const ENDPOINT = "accountInfo";
 
-    use \ComplyCube\ResourceActions\GetDirectResource;
+    use GetDirectResource;
 
-    public function __construct(\ComplyCube\ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient)
     {
-        parent::__construct($apiClient, '\ComplyCube\Model\AccountInfo');
+        parent::__construct($apiClient, "\ComplyCube\Model\AccountInfo");
     }
 }

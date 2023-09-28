@@ -2,34 +2,32 @@
 
 namespace ComplyCube\Tests\Integration;
 
-use ComplyCube\ApiClient;
 use ComplyCube\ComplyCubeClient;
-use ComplyCube\Model\RiskProfile;
-use ComplyCube\Model\PersonDetails;
 use ComplyCube\Model\Client;
+use ComplyCube\Model\PersonDetails;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \ComplyCube\Resources\RiskProfileApi
  */
-class RiskProfileTest extends \PHPUnit\Framework\TestCase
+class RiskProfileTest extends TestCase
 {
-    private $complycube;
-    private $document;
-    private $personClient;
+    private ?ComplyCubeClient $complycube;
+    private ?Client $personClient;
 
     protected function setUp(): void
     {
         if (empty($this->complycube)) {
-            $apiKey = getenv('CC_API_KEY');
+            $apiKey = getenv("CC_API_KEY");
             $this->complycube = new ComplyCubeClient($apiKey);
         }
         if (empty($this->personClient)) {
             $personDetails = new PersonDetails();
-            $personDetails->firstName = 'Richard';
-            $personDetails->lastName = 'Nixon';
+            $personDetails->firstName = "Richard";
+            $personDetails->lastName = "Nixon";
             $newClient = new Client();
-            $newClient->type = 'person';
-            $newClient->email = 'john@doe.com';
+            $newClient->type = "person";
+            $newClient->email = "john@doe.com";
             $newClient->personDetails = $personDetails;
             $this->personClient = $newClient;
         }
@@ -43,8 +41,8 @@ class RiskProfileTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-    * @depends testCreatePersonForDocument
-    */
+     * @depends testCreatePersonForDocument
+     */
     public function testGetRiskProfile($clientId)
     {
         $result = $this->complycube->riskProfiles()->get($clientId);

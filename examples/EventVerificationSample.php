@@ -1,9 +1,7 @@
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . "/vendor/autoload.php";
 
-use ComplyCube\ComplyCubeClient;
-use ComplyCube\Model\Event;
 use ComplyCube\EventVerifier;
 use ComplyCube\Exception\VerificationException;
 
@@ -11,12 +9,14 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, Complycube-Signature, X-Requested-With");
+header(
+    "Access-Control-Allow-Headers: Content-Type, Authorization, Complycube-Signature, X-Requested-With",
+);
 
-$data = file_get_contents('php://input');
-$verifier = new \ComplyCube\EventVerifier('COMPLYCUBE_WEBHOOK_SECRET');
+$data = file_get_contents("php://input");
+$verifier = new EventVerifier("COMPLYCUBE_WEBHOOK_SECRET");
 $headers = apache_request_headers();
-define("SIGNATURE_KEY", 'Complycube-Signature');
+define("SIGNATURE_KEY", "Complycube-Signature");
 
 try {
     if (!isset($headers[SIGNATURE_KEY])) {
@@ -38,7 +38,7 @@ try {
     }
     http_response_code(200);
     return;
-} catch (\ComplyCube\Exception\VerificationException $e) {
+} catch (VerificationException $e) {
     http_response_code(400);
     return;
 }

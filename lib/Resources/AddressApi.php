@@ -2,30 +2,46 @@
 
 namespace ComplyCube\Resources;
 
-class AddressApi extends \ComplyCube\ApiResource
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
+use ComplyCube\Model\Address;
+use ComplyCube\Model\ComplyCubeCollection;
+use ComplyCube\ResourceActions\CreateResource;
+use ComplyCube\ResourceActions\DeleteResource;
+use ComplyCube\ResourceActions\GetResource;
+use ComplyCube\ResourceActions\ListResource;
+use ComplyCube\ResourceActions\SearchResource;
+use ComplyCube\ResourceActions\UpdateResource;
+
+class AddressApi extends ApiResource
 {
-    const ENDPOINT = 'addresses';
+    const ENDPOINT = "addresses";
 
-    use \ComplyCube\ResourceActions\GetResource;
-    use \ComplyCube\ResourceActions\UpdateResource;
-    use \ComplyCube\ResourceActions\DeleteResource;
-
-    public function __construct(\ComplyCube\ApiClient $apiClient)
-    {
-        parent::__construct($apiClient, '\ComplyCube\Model\Address');
+    use GetResource, UpdateResource, DeleteResource, SearchResource {
+        GetResource::get insteadof SearchResource;
     }
 
-    use \ComplyCube\ResourceActions\CreateResource {
-        \ComplyCube\ResourceActions\CreateResource::create as traitCreate;
+    use CreateResource {
+        CreateResource::create as traitCreate;
+    }
+
+    use ListResource {
+        ListResource::list as traitList;
+    }
+
+    public function __construct(ApiClient $apiClient)
+    {
+        parent::__construct($apiClient, "\ComplyCube\Model\Address");
     }
 
     /**
      * Creates a new address.
      *
-     * @param $clientId client to assign new address to.
+     * @param string $clientId client to assign new address to.
+     * @param mixed $address address data
      * @return Address
      */
-    public function create(string $clientId, $address)
+    public function create(string $clientId, $address): Address
     {
         if (is_array($address)) {
             $address["clientId"] = $clientId;
@@ -35,19 +51,18 @@ class AddressApi extends \ComplyCube\ApiResource
         return $this->traitCreate($address);
     }
 
-    use \ComplyCube\ResourceActions\ListResource {
-        \ComplyCube\ResourceActions\ListResource::list as traitList;
-    }
-
     /**
      * List out addresses belonging to client.
      *
-     * @param $clientId client whose addresses to retrieve.
-     * @return Address
+     * @param string $clientId client whose addresses to retrieve.
+     * @param mixed $queryParams query parameters.
+     * @return ComplyCubeCollection
      */
-    public function list(string $clientId, $queryParams = [])
-    {
-        $queryParams['clientId'] = $clientId;
+    public function list(
+        string $clientId,
+        $queryParams = []
+    ): ComplyCubeCollection {
+        $queryParams["clientId"] = $clientId;
         return $this->traitList($queryParams);
     }
 }

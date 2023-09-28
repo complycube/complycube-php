@@ -2,55 +2,61 @@
 
 namespace ComplyCube\Tests\Integration;
 
-use ComplyCube\ApiClient;
 use ComplyCube\ComplyCubeClient;
-use ComplyCube\Model\PersonDetails;
-use ComplyCube\Model\FlowSession;
 use ComplyCube\Model\Client;
+use ComplyCube\Model\FlowSession;
+use ComplyCube\Model\PersonDetails;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \ComplyCube\Resources\FlowSessionApi
  */
-class FlowSessionTest extends \PHPUnit\Framework\TestCase
+class FlowSessionTest extends TestCase
 {
-    private $complycube;
-    private $personClient;
-    private $fs;
+    private ?ComplyCubeClient $complycube;
+    private ?Client $personClient;
+    private ?FlowSession $fs;
 
     protected function setUp(): void
     {
         if (empty($this->complycube)) {
-            $apiKey = getenv('CC_API_KEY');
+            $apiKey = getenv("CC_API_KEY");
             $this->complycube = new ComplyCubeClient($apiKey);
         }
         $personDetails = new PersonDetails();
-        $personDetails->firstName = 'Richard';
-        $personDetails->lastName = 'Nixon';
+        $personDetails->firstName = "Richard";
+        $personDetails->lastName = "Nixon";
         $newClient = new Client();
-        $newClient->type = 'person';
-        $newClient->email = 'john@doe.com';
+        $newClient->type = "person";
+        $newClient->email = "john@doe.com";
         $newClient->personDetails = $personDetails;
         $this->personClient = $newClient;
 
         $this->fs = new FlowSession();
-        $this->fs->checkTypes = ['extensive_screening_check'];
-        $this->fs->successUrl = 'https://complycube.com';
-        $this->fs->cancelUrl = 'https://complycube.com';
+        $this->fs->checkTypes = ["extensive_screening_check"];
+        $this->fs->successUrl = "https://complycube.com";
+        $this->fs->cancelUrl = "https://complycube.com";
     }
 
     public function testCreatePersonForSession(): string
     {
         $result = $this->complycube->clients()->create($this->personClient);
-        $this->assertEquals($this->personClient->personDetails->firstName, $result->personDetails->firstName);
-        $this->assertEquals($this->personClient->personDetails->lastName, $result->personDetails->lastName);
+        $this->assertEquals(
+            $this->personClient->personDetails->firstName,
+            $result->personDetails->firstName
+        );
+        $this->assertEquals(
+            $this->personClient->personDetails->lastName,
+            $result->personDetails->lastName
+        );
         $this->assertEquals($this->personClient->email, $result->email);
         $this->assertEquals($this->personClient->type, $result->type);
         return $result->id;
     }
 
     /**
-    * @depends testCreatePersonForSession
-    */
+     * @depends testCreatePersonForSession
+     */
     public function testCreateFlowSession($clientId)
     {
         $flowSession = $this->fs;
@@ -60,14 +66,16 @@ class FlowSessionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-    * @depends testCreatePersonForSession
-    */
+     * @depends testCreatePersonForSession
+     */
     public function testCreateFlowSessionInline($clientId)
     {
-        $result = $this->complycube->flow()->createSession(['clientId' => $clientId, 
-                                                            'checkTypes' => $this->fs->checkTypes, 
-                                                            'successUrl' => $this->fs->successUrl,
-                                                            'cancelUrl' => $this->fs->cancelUrl]);
+        $result = $this->complycube->flow()->createSession([
+            "clientId" => $clientId,
+            "checkTypes" => $this->fs->checkTypes,
+            "successUrl" => $this->fs->successUrl,
+            "cancelUrl" => $this->fs->cancelUrl,
+        ]);
         $this->assertNotNull($result->redirectUrl);
     }
 }

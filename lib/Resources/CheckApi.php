@@ -2,34 +2,38 @@
 
 namespace ComplyCube\Resources;
 
-use \ComplyCube\Model\Validation;
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
+use ComplyCube\Model\Check;
+use ComplyCube\Model\Validation;
+use ComplyCube\ResourceActions\CreateResource;
+use ComplyCube\ResourceActions\GetResource;
+use ComplyCube\ResourceActions\ListResource;
+use ComplyCube\ResourceActions\UpdateResource;
 
-class CheckApi extends \ComplyCube\ApiResource
+class CheckApi extends ApiResource
 {
-    const ENDPOINT = 'checks';
+    const ENDPOINT = "checks";
 
-    use \ComplyCube\ResourceActions\GetResource;
-    use \ComplyCube\ResourceActions\CreateResource;
-    use \ComplyCube\ResourceActions\UpdateResource;
-    use \ComplyCube\ResourceActions\ListResource;
+    use GetResource, UpdateResource, ListResource;
 
-    public function __construct(\ComplyCube\ApiClient $apiClient)
-    {
-        parent::__construct($apiClient, '\ComplyCube\Model\Check');
+    use CreateResource {
+        CreateResource::create as traitCreate;
     }
 
-    use \ComplyCube\ResourceActions\CreateResource {
-        \ComplyCube\ResourceActions\CreateResource::create as traitCreate;
+    public function __construct(ApiClient $apiClient)
+    {
+        parent::__construct($apiClient, "\ComplyCube\Model\Check");
     }
 
     /**
      * Creates a new Check.
      *
-     * @param $clientId of the client.
-     * @param $document document object/array of detail.
+     * @param string $clientId of the client.
+     * @param mixed $check object/array of detail.
      * @return Check
      */
-    public function create(string $clientId, $check)
+    public function create(string $clientId, $check): Check
     {
         if (is_array($check)) {
             $check["clientId"] = $clientId;
@@ -43,12 +47,16 @@ class CheckApi extends \ComplyCube\ApiResource
      * Validates outcome of the specified check.
      *
      * @param string $checkId being validated.
-     * @param $validation details to be applied.
+     * @param mixed $validation details to be applied.
      * @return Validation
      */
     public function validate(string $checkId, $validation): Validation
     {
-        $response = $this->apiClient->post($this::ENDPOINT . '/' . $checkId .'/validate', [], $validation);
+        $response = $this->apiClient->post(
+            $this::ENDPOINT . "/" . $checkId . "/validate",
+            [],
+            $validation,
+        );
         $validation = new Validation($response->getDecodedBody()->outcome);
         return $validation;
     }

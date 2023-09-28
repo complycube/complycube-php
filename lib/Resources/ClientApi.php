@@ -2,18 +2,26 @@
 
 namespace ComplyCube\Resources;
 
-class ClientApi extends \ComplyCube\ApiResource
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
+use ComplyCube\ResourceActions\CreateResource;
+use ComplyCube\ResourceActions\DeleteResource;
+use ComplyCube\ResourceActions\GetResource;
+use ComplyCube\ResourceActions\ListResource;
+use ComplyCube\ResourceActions\UpdateResource;
+
+class ClientApi extends ApiResource
 {
-    const ENDPOINT = 'clients';
+    const ENDPOINT = "clients";
 
-    use \ComplyCube\ResourceActions\GetResource;
-    use \ComplyCube\ResourceActions\CreateResource;
-    use \ComplyCube\ResourceActions\UpdateResource;
-    use \ComplyCube\ResourceActions\DeleteResource;
-    use \ComplyCube\ResourceActions\ListResource;
+    use GetResource,
+        CreateResource,
+        UpdateResource,
+        DeleteResource,
+        ListResource;
 
-    public function __construct(\ComplyCube\ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient)
     {
-        parent::__construct($apiClient, '\ComplyCube\Model\Client');
+        parent::__construct($apiClient, "\ComplyCube\Model\Client");
     }
 }

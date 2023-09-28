@@ -2,30 +2,23 @@
 
 namespace ComplyCube\Model;
 
-class AuditDiff implements \JsonSerializable
+use stdClass;
+
+class AuditDiff extends Model
 {
     public ?string $action;
-    public $path = [];
-    public $old;
+    public ?array $path;
+    public ?string $old;
     public $new;
 
-    public function __construct($aDiff)
+    public function load(stdClass $response): void
     {
-        $this->action = $aDiff->action;
-        $this->path = $aDiff->path;
-        $this->old = isset($aDiff->old) ? $aDiff->old : null;
-        $this->new = isset($aDiff->new) ? $aDiff->new : null;
-    }
+        parent::load($response);
 
-    public function jsonSerialize()
-    {
-        return array_filter([
-            'action' => $this->action,
-            'path' => $this->path,
-            'old' => $this->old,
-            'new' => $this->new
-        ], function ($value) {
-            return ($value !== null);
-        });
+        $this->path = property_exists($response, "path")
+            ? $response->path
+            : null;
+
+        $this->new = property_exists($response, "new") ? $response->new : null;
     }
 }

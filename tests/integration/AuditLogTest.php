@@ -2,25 +2,21 @@
 
 namespace ComplyCube\Tests\Integration;
 
-use ComplyCube\ApiClient;
+use Carbon\Carbon;
 use ComplyCube\ComplyCubeClient;
-use ComplyCube\Model\Report;
-
-use ComplyCube\Model\Check;
-use ComplyCube\Model\Client;
-use ComplyCube\Model\PersonDetails;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \ComplyCube\Resources\AuditLogApi
  */
-class AuditLogTest extends \PHPUnit\Framework\TestCase
+class AuditLogTest extends TestCase
 {
-    private $complycube;
+    private ?ComplyCubeClient $complycube;
 
     protected function setUp(): void
     {
         if (empty($this->complycube)) {
-            $apiKey = getenv('CC_API_KEY');
+            $apiKey = getenv("CC_API_KEY");
             $this->complycube = new ComplyCubeClient($apiKey);
         }
     }
@@ -34,25 +30,25 @@ class AuditLogTest extends \PHPUnit\Framework\TestCase
 
     public function testListOnly10AuditLogs()
     {
-        $result = $this->complycube->AuditLogs()->list(['pageSize' => 10]);
+        $result = $this->complycube->AuditLogs()->list(["pageSize" => 10]);
         $this->assertEquals(10, iterator_count($result));
     }
 
     public function testFilterUpdateOnly()
     {
-        $result = $this->complycube->AuditLogs()->list(['action' => 'update']);
+        $result = $this->complycube->AuditLogs()->list(["action" => "update"]);
         foreach ($result as $res) {
-            $this->assertEquals('update', $res->action);
+            $this->assertEquals("update", $res->action);
         }
     }
 
     /**
-    * @depends testListAuditLogs
-    */
+     * @depends testListAuditLogs
+     */
     public function testGetAuditLog($id)
     {
         $result = $this->complycube->AuditLogs()->get($id);
         $this->assertEquals($id, $result->id);
-        $this->assertLessThan(new \DateTime('NOW'), $result->createdAt);
+        $this->assertLessThan(Carbon::now(), $result->createdAt);
     }
 }

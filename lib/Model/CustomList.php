@@ -5,14 +5,13 @@ namespace ComplyCube\Model;
 use Carbon\Carbon;
 use stdClass;
 
-class Webhook extends Model
+class CustomList extends Model
 {
     public ?string $id;
+    public ?string $name;
     public ?string $description;
-    public ?string $url;
-    public ?bool $enabled;
-    public ?array $events;
-    public ?string $secret;
+    public ?CustomListStats $stats;
+    protected ?string $lastActionBy;
     protected ?Carbon $createdAt;
     protected ?Carbon $updatedAt;
 
@@ -20,8 +19,8 @@ class Webhook extends Model
     {
         parent::load($response);
 
-        $this->events = property_exists($response, "events")
-            ? $response->events
+        $this->stats = property_exists($response, "stats")
+            ? new CustomListStats($response->stats)
             : null;
     }
 }

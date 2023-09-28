@@ -2,26 +2,29 @@
 
 namespace ComplyCube;
 
-use GuzzleHttp\Client;
 use ComplyCube\ApiResponse;
-use GuzzleHttp\HandlerStack;
-use GuzzleRetry\GuzzleRetryMiddleware;
 use ComplyCube\Exception\ComplyCubeClientException;
 use ComplyCube\Exception\ComplyCubeServerException;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\HandlerStack;
+use GuzzleRetry\GuzzleRetryMiddleware;
 
 class ApiClient
 {
     /** @var integer */
-    const VERSION = '1.0.0';
-    
-    /** @var string ComplyCube API key from developer dashboard */
-    private $apiKey;
-    
-    /** @var string base URL for ComplyCube API. */
-    const BASEURL = 'https://api.complycube.com/v1';
+    const VERSION = "1.1.3";
 
-    /** @var \GuzzleHttp\ClientInterface Guzzle Http Client used to make requests */
-    public $httpClient;
+    /** @var string ComplyCube API key from developer dashboard */
+    private string $apiKey;
+
+    /** @var string base URL for ComplyCube API. */
+    const BASEURL = "https://api.complycube.com/v1";
+
+    /** @var ClientInterface Guzzle Http Client used to make requests */
+    public ?ClientInterface $httpClient;
 
     public static function randomJitter($numRequests, $response): float
     {
@@ -36,14 +39,23 @@ class ApiClient
     {
         if (!isset($this->httpClient)) {
             $stack = HandlerStack::create();
-            $stack->push(GuzzleRetryMiddleware::factory([
-                'max_retry_attempts' => $maxRetries,
-                'default_retry_multiplier' => [ApiClient::class, 'randomJitter']]));
-            $this->httpClient = new Client(['headers' => [
-                'Authorization' => $apiKey,
-                'User-Agent' => 'complycube-php/'.self::VERSION,
-                'Content-Type' => 'application/json'],
-                'handler' => $stack]);
+            $stack->push(
+                GuzzleRetryMiddleware::factory([
+                    "max_retry_attempts" => $maxRetries,
+                    "default_retry_multiplier" => [
+                        ApiClient::class,
+                        "randomJitter",
+                    ],
+                ])
+            );
+            $this->httpClient = new Client([
+                "headers" => [
+                    "Authorization" => $apiKey,
+                    "User-Agent" => "complycube-php/" . self::VERSION,
+                    "Content-Type" => "application/json",
+                ],
+                "handler" => $stack,
+            ]);
         }
     }
 
@@ -56,7 +68,7 @@ class ApiClient
      */
     public function get(string $endpoint, array $queryParams = []): ApiResponse
     {
-        return $this->sendRequest($endpoint, 'GET', $queryParams);
+        return $this->sendRequest($endpoint, "GET", $queryParams);
     }
 
     /**
@@ -64,12 +76,15 @@ class ApiClient
      *
      * @param string $endpoint api endpoint class.
      * @param array $queryParams array of url encoding params.
-     * @param string $data body of post
+     * @param mixed $data body of post
      * @return ApiResponse the result object to map to model.
      */
-    public function post(string $endpoint, array $options, $data = null): ApiResponse
-    {
-        return $this->sendRequest($endpoint, 'POST', $options, $data);
+    public function post(
+        string $endpoint,
+        array $options,
+        $data = null
+    ): ApiResponse {
+        return $this->sendRequest($endpoint, "POST", $options, $data);
     }
 
     /**
@@ -81,7 +96,7 @@ class ApiClient
      */
     public function delete(string $endpoint, array $options = []): void
     {
-        $this->sendRequest($endpoint, 'DELETE', $options);
+        $this->sendRequest($endpoint, "DELETE", $options);
     }
 
     /**
@@ -93,19 +108,39 @@ class ApiClient
      * @param mixed $data object to be encoded to message body.
      * @return ApiResponse the result object to map to model.
      */
-    public function sendRequest(string $endpoint, string $method, array $options = [], $data = null): ApiResponse
-    {
-        if (\in_array($method, ['POST','PUT'], true)) {
-            $options['json'] = $data;
+    public function sendRequest(
+        string $endpoint,
+        string $method,
+        array $options = [],
+        $data = null
+    ): ApiResponse {
+        if (\in_array($method, ["POST", "PUT"], true)) {
+            $options["json"] = $data;
         }
         try {
-            $rawResponse = $this->httpClient->request($method, $this::BASEURL.'/'.$endpoint, $options);
-        } catch (\GuzzleHttp\Exception\ClientException $exception) {
-            throw new ComplyCubeClientException($exception->getMessage(), $exception->getCode(), $exception);
-        } catch (\GuzzleHttp\Exception\ServerException $exception) {
-            throw new ComplyCubeServerException($exception->getMessage(), $exception->getCode(), $exception);
+            $rawResponse = $this->httpClient->request(
+                $method,
+                $this::BASEURL . "/" . $endpoint,
+                $options
+            );
+        } catch (ClientException $exception) {
+            throw new ComplyCubeClientException(
+                $exception->getMessage(),
+                $exception->getCode(),
+                $exception
+            );
+        } catch (ServerException $exception) {
+            throw new ComplyCubeServerException(
+                $exception->getMessage(),
+                $exception->getCode(),
+                $exception
+            );
         }
-        $response = new ApiResponse($rawResponse->getStatusCode(), $rawResponse->getBody(), $rawResponse->getHeaders());
+        $response = new ApiResponse(
+            $rawResponse->getStatusCode(),
+            $rawResponse->getBody(),
+            $rawResponse->getHeaders()
+        );
         return $response;
     }
 }

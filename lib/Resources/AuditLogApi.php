@@ -2,15 +2,19 @@
 
 namespace ComplyCube\Resources;
 
-class AuditLogApi extends \ComplyCube\ApiResource
+use ComplyCube\ApiClient;
+use ComplyCube\ApiResource;
+use ComplyCube\ResourceActions\GetResource;
+use ComplyCube\ResourceActions\ListResource;
+
+class AuditLogApi extends ApiResource
 {
-    const ENDPOINT = 'auditLogs';
+    const ENDPOINT = "auditLogs";
 
-    use \ComplyCube\ResourceActions\GetResource;
-    use \ComplyCube\ResourceActions\ListResource;
+    use GetResource, ListResource;
 
-    public function __construct(\ComplyCube\ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient)
     {
-        parent::__construct($apiClient, '\ComplyCube\Model\AuditLog');
+        parent::__construct($apiClient, "\ComplyCube\Model\AuditLog");
     }
 }
