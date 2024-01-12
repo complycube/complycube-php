@@ -49,7 +49,7 @@ class ComplyCubeCollection extends Model implements Iterator
         $this->rewind();
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter(
             parent::jsonSerialize(),
@@ -63,12 +63,12 @@ class ComplyCubeCollection extends Model implements Iterator
         $this->position = 0;
     }
 
-    public function current()
+    public function current(): mixed
     {
         return $this->items[$this->position];
     }
 
-    public function key()
+    public function key(): mixed
     {
         return $this->position;
     }
