@@ -66,4 +66,6 @@ When you’re done developing your ComplyCube integration and you’re ready to 
 ## About ComplyCube
 
 [ComplyCube](https://www.complycube.com/en), the award-winning SaaS & API platform, specializes in innovative solutions for Identity Verification (IDV), Anti-Money Laundering (AML), and Know Your Customer (KYC) compliance. With a vast clientele across multiple industries such as financial services, transport, healthcare, e-commerce, cryptocurrency, FinTech, and telecoms, ComplyCube is a leading entity in the IDV domain.
+<br>
+<br>
 This ISO-certified platform is distinguished by its ability to integrate quickly across channels and the comprehensive nature of its service suite, including Low/No-Code solutions, extensive API, Mobile SDKs, Client Libraries, and seamless CRM integrations.
