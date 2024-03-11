@@ -69,7 +69,7 @@ abstract class Model implements JsonSerializable
         }
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_filter(
             array_map(function ($value) {
