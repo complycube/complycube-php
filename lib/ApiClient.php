@@ -15,8 +15,8 @@ use GuzzleRetry\GuzzleRetryMiddleware;
 class ApiClient
 {
     /** @var integer */
-    const VERSION = "1.1.3";
-  
+    const VERSION = '1.1.5';
+    
     /** @var string ComplyCube API key from developer dashboard */
     private string $apiKey;
 

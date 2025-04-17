@@ -30,4 +30,10 @@ class TokenApi extends ApiResource
                 : "referrer" => $referrer,
         ]);
     }
+
+    public function generateAppToken(string $clientId, string $appId): \ComplyCube\Model\Token
+    {
+        $request = ['clientId' => $clientId, 'appId' => $appId];
+        return $this->create($request);
+    }
 }
