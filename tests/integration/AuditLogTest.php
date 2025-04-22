@@ -49,6 +49,6 @@ class AuditLogTest extends TestCase
     {
         $result = $this->complycube->AuditLogs()->get($id);
         $this->assertEquals($id, $result->id);
-        $this->assertLessThan(Carbon::now(), $result->createdAt);
+        $this->assertLessThan(Carbon::now()->timestamp, Carbon::parse($result->createdAt)->timestamp);
     }
 }
