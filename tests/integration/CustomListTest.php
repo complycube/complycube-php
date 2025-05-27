@@ -144,7 +144,7 @@ class CustomListTest extends TestCase
     {
         $result = $this->complycube
             ->customLists()
-            ->get("6286d8c68934e300099ee74f");
+            ->get("652e4916dfb98d0008ce7811");
 
         $this->custom_list_assertions($result);
 
