@@ -20,7 +20,7 @@
         "php": ">=7.4",
         "caseyamcl/guzzle_retry_middleware": "^2.8.0",
         "guzzlehttp/guzzle": "^7.5.0",
-        "nesbot/carbon": "^2.72.6"
+        "nesbot/carbon": "^3.8.4"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.16.0",

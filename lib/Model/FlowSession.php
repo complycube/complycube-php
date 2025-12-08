@@ -8,12 +8,14 @@ class FlowSession extends Model
 {
     public ?string $clientId;
     public ?array $checkTypes;
+    public ?string $workflowTemplateId;
     public ?string $successUrl;
     public ?string $cancelUrl;
     public ?bool $enableMonitoring;
     public ?string $language;
     public ?string $theme;
     public ?string $redirectUrl;
+    public ?bool $shortUrl;
 
     public function load(stdClass $response): void
     {

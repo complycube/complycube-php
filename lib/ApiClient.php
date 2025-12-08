@@ -14,8 +14,8 @@ use GuzzleRetry\GuzzleRetryMiddleware;
 
 class ApiClient
 {
-    /** @var integer */
-    const VERSION = '1.1.5';
+    /** @var string */
+    const VERSION = '1.1.6';
     
     /** @var string ComplyCube API key from developer dashboard */
     private string $apiKey;
@@ -26,10 +26,20 @@ class ApiClient
     /** @var ClientInterface Guzzle Http Client used to make requests */
     public ?ClientInterface $httpClient;
 
-    public static function randomJitter($numRequests, $response): float
+    public static function randomJitter(int $numRequests, mixed $response): float
     {
-        return (float) rand(0, $numRequests ** 1.5);
+        if ($numRequests <= 0) {
+            return 0.0;
+        }
+
+        $max = (int) max(1.0, ceil($numRequests ** 1.5));
+
+        $rng = new \Random\Randomizer();
+
+        // Float jitter in [0.0, $max)
+        return $rng->getFloat(0.0, (float) $max);
     }
+
     /**
      * Create instance of ComplyCube API client
      *

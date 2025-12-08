@@ -48,7 +48,11 @@ class AuditLogTest extends TestCase
     public function testGetAuditLog($id)
     {
         $result = $this->complycube->AuditLogs()->get($id);
+        $createdAt = Carbon::parse($result->createdAt);
+        $this->assertTrue(
+            $createdAt->between(Carbon::now()->subMinute(), Carbon::now()->addSecond()),
+            'createdAt was not within the expected time window'
+        );
         $this->assertEquals($id, $result->id);
-        $this->assertLessThan(Carbon::now()->timestamp, Carbon::parse($result->createdAt)->timestamp);
     }
 }

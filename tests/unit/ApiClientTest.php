@@ -66,7 +66,12 @@ class ApiClientTest extends TestCase
     public function testRetryAttemptRequest()
     {
         $value = ApiClient::randomJitter(3, null);
-        $this->assertLessThan(3 ** 1.5, $value);
+
+        $this->assertIsFloat($value);
+        $this->assertGreaterThanOrEqual(0.0, $value);
+
+        $max = (float) ceil(3 ** 1.5); // matches the implementation's upper bound
+        $this->assertLessThan($max, $value);
     }
 
     public function testClientExceptionRequest()

@@ -3,15 +3,16 @@
 namespace ComplyCube\Model;
 
 use Iterator;
+use Countable;
 use stdClass;
 
-class ComplyCubeCollection extends Model implements Iterator
+class ComplyCubeCollection extends Model implements Iterator, Countable
 {
     public int $page;
     public int $pageSize;
     public int $totalItems;
     public int $pages;
-    public ?array $items;
+    public ?array $items = null;
     private int $position;
     private string $model;
 
@@ -38,7 +39,8 @@ class ComplyCubeCollection extends Model implements Iterator
             ? $response->pages
             : 0;
 
-        if (property_exists($response, "items")) {
+        if (property_exists($response, "items") && is_iterable($response->items)) {
+            $this->items = [];
             foreach ($response->items as $item) {
                 $this->items[] = new $this->model($item);
             }
@@ -47,6 +49,11 @@ class ComplyCubeCollection extends Model implements Iterator
         }
 
         $this->rewind();
+    }
+
+    public function count(): int
+    {
+        return is_array($this->items) ? count($this->items) : 0;
     }
 
     public function jsonSerialize(): mixed
