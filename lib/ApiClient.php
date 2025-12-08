@@ -31,13 +31,9 @@ class ApiClient
         if ($numRequests <= 0) {
             return 0.0;
         }
-
-        $max = (int) max(1.0, ceil($numRequests ** 1.5));
-
-        $rng = new \Random\Randomizer();
-
-        // Float jitter in [0.0, $max)
-        return $rng->getFloat(0.0, (float) $max);
+        $max = (int) ceil($numRequests ** 1.5);
+        $max = max(1, $max);
+        return (float) random_int(0, $max);
     }
 
     /**
