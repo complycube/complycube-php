@@ -35,7 +35,7 @@ class ClientTest extends TestCase
                 "gender" => "female",
                 "nationality" => "GB",
                 "birthCountry" => "US",
-                "ssn" => "111111111",
+                "ssn" => "123-45-6789",
                 "socialInsuranceNumber" => "SI00000000",
                 "nationalIdentityNumber" => "NI00000000",
                 "taxIdentificationNumber" => "TIN0000000",
@@ -59,7 +59,7 @@ class ClientTest extends TestCase
             "personDetails" => [
                 "firstName" => "Jane",
                 "lastName" => "Smith",
-                "ssn" => "111111111",
+                "ssn" => "123-45-6789",
             ],
         ]);
 

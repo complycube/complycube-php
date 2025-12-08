@@ -19,6 +19,7 @@ use ComplyCube\Resources\RiskProfileApi;
 use ComplyCube\Resources\TeamMemberApi;
 use ComplyCube\Resources\TokenApi;
 use ComplyCube\Resources\WebhookApi;
+use ComplyCube\Resources\WorkflowSessionApi;
 
 class ComplyCubeClient
 {
@@ -39,6 +40,7 @@ class ComplyCubeClient
     private ?FlowSessionApi $flowSessionApi;
     private ?CompanyApi $companyApi;
     private ?CustomListApi $customListApi;
+    private ?WorkflowSessionApi $workflowSessionApi;
 
     /**
      * Create a ComplyCubeClient API Client Instance for the provided
@@ -292,5 +294,18 @@ class ComplyCubeClient
             $this->customListApi = new CustomListApi($this->apiClient);
         }
         return $this->customListApi;
+    }
+
+    /**
+     * The workflow sessions API allows you to run and retrieve workflow sessions. You can retrieve a specific workflow sessions as well as a list of all your client's workflow sessions.
+     *
+     * @return WorkflowSessionApi
+     */
+    public function workflowSessions(): WorkflowSessionApi
+    {
+        if (empty($this->workflowSessionApi)) {
+            $this->workflowSessionApi = new WorkflowSessionApi($this->apiClient);
+        }
+        return $this->workflowSessionApi;
     }
 }

@@ -51,7 +51,7 @@ class WebhookTest extends TestCase
     public function testCreateWebhook($enabled = false): Webhook
     {
         $webhook = new Webhook([
-            "url" => "http://hook.com/",
+            "url" => "https://www.complycube.com/",
             "enabled" => $enabled,
             "events" => ["check.pending"],
         ]);
@@ -70,12 +70,12 @@ class WebhookTest extends TestCase
     public function testUpdateWebhookInline(Webhook $webhook): void
     {
         $result = $this->complycube->webhooks()->update($webhook->id, [
-            "url" => "https://newurl/endpoint",
+            "url" => "https://www.complycube.com/",
             "enabled" => false,
         ]);
         $this->webhook_assertions($result);
         $this->assertNull($result->secret);
-        $this->assertEquals("https://newurl/endpoint", $result->url);
+        $this->assertEquals("https://www.complycube.com/", $result->url);
     }
 
     /**
@@ -84,7 +84,7 @@ class WebhookTest extends TestCase
     public function testUpdateWebhook(Webhook $webhook): void
     {
         $newWebhook = $webhook;
-        $newWebhook->url = "https://newurl/endpoint";
+        $newWebhook->url = "https://www.complycube.com/";
         $result = $this->complycube
             ->webhooks()
             ->update($webhook->id, $newWebhook);

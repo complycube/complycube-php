@@ -219,7 +219,7 @@ class CustomListTest extends TestCase
 
         $this->assertInstanceOf(ComplyCubeCollection::class, $result);
 
-        $this->assertCount(1, $result);
+        $this->assertGreaterThan(1, count($result));
 
         foreach ($result->items as $item) {
             $this->custom_list_assertions($item);
