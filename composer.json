@@ -24,9 +24,9 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.16.0",
-        "phpunit/phpunit": "^9.6.6",
+        "phpunit/phpunit": "^9.6.33",
         "squizlabs/php_codesniffer": "^3.7.2",
-        "symfony/process": "^6.4.14",
+        "symfony/process": "^6.4.33",
         "symfony/var-dumper": ">=5.4.22",
         "vlucas/phpdotenv": "^5.6"
     },
