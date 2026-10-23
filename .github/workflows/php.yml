@@ -2,6 +2,10 @@ name: CI
 
 on: push
 
+concurrency:
+  group: integration-tests
+  cancel-in-progress: false
+
 jobs:
   build:
     strategy:

@@ -161,7 +161,13 @@ class WebhookTest extends TestCase
             $this->webhook_assertions($hook);
             $this->assertNull($hook->secret);
             sleep(3);
-            $this->complycube->webhooks()->delete($hook->id);
+            try {
+                $this->complycube->webhooks()->delete($hook->id);
+            } catch (ComplyCubeClientException $e) {
+                if ($e->getCode() !== 404) {
+                    throw $e;
+                }
+            }
         }
         $hooks = $this->complycube->webhooks()->list();
         $this->assertInstanceOf(ComplyCubeCollection::class, $hooks);
