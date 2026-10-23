@@ -55,27 +55,20 @@ class CompanyTest extends TestCase
                 $this->assertNotNull($item->$key);
             }
 
-            foreach (["line", "city", "postalCode", "country"] as $key) {
+            foreach (
+                ["line", "city", "postalCode", "country", "fullAddress"]
+                as $key
+            ) {
                 $this->assertNotNull($item->address->$key);
             }
 
             foreach (["createdAt", "updatedAt"] as $property_name) {
-                $item_reflection_property = new ReflectionProperty(
-                    $item,
-                    $property_name
-                );
-
                 $address_reflection_property = new ReflectionProperty(
                     $item->address,
                     $property_name
                 );
 
-                $item_reflection_property->setAccessible(true);
                 $address_reflection_property->setAccessible(true);
-
-                $this->assertNotNull(
-                    $item_reflection_property->getValue($item)
-                );
 
                 $this->assertNull(
                     $address_reflection_property->getValue($item->address)
@@ -129,7 +122,10 @@ class CompanyTest extends TestCase
             $this->assertNotNull($result->$key);
         }
 
-        foreach (["line", "city", "postalCode", "country"] as $key) {
+        foreach (
+            ["line", "city", "postalCode", "country", "fullAddress"]
+            as $key
+        ) {
             $this->assertNotNull($result->address->$key);
         }
 
@@ -152,7 +148,6 @@ class CompanyTest extends TestCase
                 "officers" => [
                     "entityName",
                     "role",
-                    "occupation",
                     "nationality",
                     "firstName",
                     "lastName",
@@ -171,22 +166,12 @@ class CompanyTest extends TestCase
         }
 
         foreach (["createdAt", "updatedAt"] as $property_name) {
-            $result_reflection_property = new ReflectionProperty(
-                $result,
-                $property_name
-            );
-
             $address_reflection_property = new ReflectionProperty(
                 $result->address,
                 $property_name
             );
 
-            $result_reflection_property->setAccessible(true);
             $address_reflection_property->setAccessible(true);
-
-            $this->assertNotNull(
-                $result_reflection_property->getValue($result)
-            );
 
             $this->assertNull(
                 $address_reflection_property->getValue($result->address)

@@ -16,6 +16,7 @@ class Address extends Model
     public ?string $state;
     public ?string $postalCode;
     public ?string $country;
+    public ?string $fullAddress;
     public ?string $fromDate;
     public ?string $toDate;
     protected ?Carbon $createdAt;
